@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Web Forum</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .search-bar {
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+    }
+    .search-bar input {
+        padding: 10px;
+        width: 300px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .main-content {
+        margin: 20px;
+    }
+    .post-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .sidebar {
+        float: right;
+        width: 20%;
+    }
+    .create-post-button {
+        background-color: #008CBA;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Your Web Forum</h1>
+</header>
+
+<div class="search-bar">
+    <input type="text" placeholder="Search for topics, posts or communities">
+</div>
+
+<div class="main-content">
+    <div class="post-item">
+        <h2>Post Title</h2>
+        <p>Post snippet...</p>
+    </div>
+    <!-- Repeat for other posts -->
+</div>
+
+<div class="sidebar">
+    <button class="create-post-button">Create Post</button>
+    <!-- Other sidebar content -->
+</div>
+
+<footer>
+    <p>&copy; 2023 Your Web Forum</p>
+</footer>
+
+</body>
+</html>
