@@ -96,20 +96,29 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js'
   import { getFirestore, addDoc, collection, setDoc } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js'
 
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDF3cwg7r4L2kCG-GYFIQUbpZ8q6Fwbe14",
+    authDomain: "cps714-webforum.firebaseapp.com",
+    projectId: "cps714-webforum",
+    storageBucket: "cps714-webforum.appspot.com",
+    messagingSenderId: "962469603977",
+    appId: "1:962469603977:web:431057b5aba67c3a68b458",
+    measurementId: "G-T3B6L2FV3P"
+  };
+  
   const app = initializeApp (firebaseConfig);
   var db = getFirestore(app);
   createApp({
   setup() {
     const message = ref('Create Post!');//test script runs
-    //const postTitle = ref('');
-    //const postContent = ref('');
     console.log("in script");
 
     const createPost = async () => {
       console.log("in create post");
         try {
          console.log(postTitle.value);
-         const docRef =  await setDoc(collection(db, 'userPosts'), {           // create a new doc in firestore.
+         const docRef =  await addDoc(collection(db, 'posts'), {           // create a new doc in firestore.
             title: postTitle.value,
             content: postContent.value,
           });
