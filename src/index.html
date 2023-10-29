@@ -71,7 +71,7 @@
      <header>
          <h1>   
             <div id="app">
-            <h2>{{ message }}</h2>
+            {{ message }}
             </div>
          </h1>
      </header>
@@ -93,18 +93,43 @@
 <script src="firebaseConfig.js"></script>
 <script type="module">
   import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js'
+  import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js'
 
-  const app = initilizeApp(firebaseConfig);
+  const app = initializeApp (firebaseConfig);
   var db = getFirestore(app);
   createApp({
-    setup() {
-      const message = ref('Create Post!')
-      return {
-        message,
+  setup() {
+    const message = ref('Create Post!');
+    const postTitle = ref('');
+    const postContent = ref('');
+
+    const createPost = async () => {
+      if (postTitle.value && postContent.value) {
+        try {
+          // Create a new post in Firestore
+         const docRef =  await addDoc(collection(db, 'userPosts'), {
+            title: postTitle.value,
+            content: postContent.value,
+          });
+          console.log("Document written with ID: ", docRef.id);
+          // Clear the input fields
+          postTitle.value = '';
+          postContent.value = '';
+        } catch (error) {
+          console.error('Error creating post: ', error);
+        }
+      } else {
+        console.log('Please fill in both title and content.');
       }
-    },
-    methods:{//method to get fields from boxes after post is pressed and to insert  those fields into firestore.
-      
+    };
+
+    return {
+      message,
+      postTitle,
+      postContent,
+      createPost,
     }
-  }).mount('#app')
+  }
+}).mount('#app');
 </script>
