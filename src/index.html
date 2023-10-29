@@ -118,16 +118,18 @@
         var newTitle = document.getElementById("postTitle").value;
         var newContent = document.getElementById("postContent").value;
         console.log("in create post");
-        const docRef = await addDoc(collection(db, "userPosts"), {
-          title: newTitle,
-          content: newContent,
-        });
-        console.log("Document written with ID: ", docRef.id);
-        this.postTitle = '';
-        this.postContent = '';
-      } catch (error) {
-        console.error('Error creating post: ', error);
-      }
+          if((newTitle != '')&&(newContent != '')){
+            const docRef = await addDoc(collection(db, "userPosts"), {
+            title: newTitle,
+            content: newContent,
+          });
+          console.log("Document written with ID: ", docRef.id);
+          this.postTitle = '';
+          this.postContent = '';
+          }
+        } catch (error) {
+          console.error('Error creating post: ', error);
+        }
       },
     },
     setup() {
