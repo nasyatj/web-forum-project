@@ -71,31 +71,34 @@
      <header>
          <h1>   
             <div id="app">
-            {{ message }}
+            <h4>{{ message }}</h4>
+              <div class="container">
+                <form id="postForm">
+                  <label for="postTitle">Title</label>
+                  <input v-model="postTitle" type="text" id="postTitle" name="postTitle" placeholder="Enter the post title" required>
+      
+                  <label for="postContent">Body</label>
+                  <textarea v-model="postContent" id="postContent" name="postContent" rows="6" placeholder="Enter the post content" required></textarea>
+      
+                  <button @click="submitForm">Create Post</button>
+                </form>
+              </div>
             </div>
          </h1>
      </header>
-     <div class="container">
-         <form>
-             <label for="postTitle">Title</label>
-             <input type="text" id="postTitle" name="postTitle" placeholder="Enter the post title" required>
- 
-             <label for="postContent">Body</label>
-             <textarea id="postContent" name="postContent" rows="6" placeholder="Enter the post content" required></textarea>
- 
-             <button id="submit" type="submit">Create Post</button>
-         </form>
-     </div>
  </body>
  </html>
  
+
+
+ 
+<!-- Your HTML code remains the same -->
 
 <script src="firebaseConfig.js"></script>
 <script type="module">
   import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js'
-  import { getFirestore, addDoc, collection, setDoc } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js'
-
+  import { getFirestore, addDoc, collection } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js'
 
   const firebaseConfig = {
     apiKey: "AIzaSyDF3cwg7r4L2kCG-GYFIQUbpZ8q6Fwbe14",
@@ -107,44 +110,42 @@
     measurementId: "G-T3B6L2FV3P"
   };
   
-  const app = initializeApp (firebaseConfig);
-  var db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const message = ref('Create Post');
+
   createApp({
-  setup() {
-    const message = ref('Create Post!');//test script runs
-    console.log("in script");
-
-    const createPost = async () => {
-      console.log("in create post");
-        try {
-         console.log(postTitle.value);
-         const docRef =  await addDoc(collection(db, 'posts'), {           // create a new doc in firestore.
-            title: postTitle.value,
-            content: postContent.value,
-          });
-          console.log("Document written with ID: ", docRef.id);  
-          postTitle.value = '';
-          postContent.value = '';           // clear input 
-        } catch (error) {
-          console.error('Error creating post: ', error);
+    methods: {
+      submitForm(event) {
+        console.log("Press detected");
+        if (this.postContent && this.postTitle) {
+          console.log("text exists");
+          this.createPost();
         }
-    };
-
-    const submitButton = async() =>{
-      if (event.target.id === 'submit') {
-        console.log("button pressed");
-        if(postContent.value && postTitle.value){
-          createPost();
-        }
+      },
+      createPost: async function () {
+      try {
+        console.log("in create post");
+        console.log(this.postTitle);
+        const docRef = await addDoc(collection(db, "userPosts"), {
+          title: postTitle.value,
+          content: postContent.value,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        this.postTitle = '';
+        this.postContent = '';
+      } catch (error) {
+        console.error('Error creating post: ', error);
       }
-    };
-
-    document.getElementById('submit').addEventListener('click', submitButton);
-    return {
-      message,
-      postContent,
-      createPost,
-    }
-  }
-}).mount('#app');
+      },
+    },
+    setup() {
+      return {
+        message,
+        postContent: ref(''),
+        postTitle: ref(''),
+        db,
+      };
+    },
+  }).mount('#app');
 </script>
