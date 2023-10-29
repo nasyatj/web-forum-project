@@ -13,9 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// to use db in a file: import db from '@/firebase'
+// to use db in a file, use this statement: import { db } from '@/firebase';
 export {
     db
 }
-
-
