@@ -1,7 +1,7 @@
 # web-forum
 
 ## Project setup
-Install node
-Clone repository
-Run npm install
+Install node <br/>
+Clone repository <br/>
+Run npm install <br/>
 Run vue serve
