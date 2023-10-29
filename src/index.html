@@ -72,16 +72,13 @@
          <h1>   
             <div id="app">
             <h4>{{ message }}</h4>
-              <div class="container">
-                <form id="postForm">
+              <div class="container"> 
                   <label for="postTitle">Title</label>
-                  <input v-model="postTitle" type="text" id="postTitle" name="postTitle" placeholder="Enter the post title" required>
+                  <input v-model="postTitle" type="text" id="postTitle" name="postTitle" placeholder="Enter the post title" required>&nbsp;
       
                   <label for="postContent">Body</label>
-                  <textarea v-model="postContent" id="postContent" name="postContent" rows="6" placeholder="Enter the post content" required></textarea>
-      
-                  <button @click="submitForm">Create Post</button>
-                </form>
+                  <textarea v-model="postContent" id="postContent" name="postContent" rows="6" placeholder="Enter Content" required></textarea>      
+                  <button @click="createPost()">Create Post</button>
               </div>
             </div>
          </h1>
@@ -116,20 +113,14 @@
 
   createApp({
     methods: {
-      submitForm(event) {
-        console.log("Press detected");
-        if (this.postContent && this.postTitle) {
-          console.log("text exists");
-          this.createPost();
-        }
-      },
-      createPost: async function () {
+      async createPost() {
       try {
+        var newTitle = document.getElementById("postTitle").value;
+        var newContent = document.getElementById("postContent").value;
         console.log("in create post");
-        console.log(this.postTitle);
         const docRef = await addDoc(collection(db, "userPosts"), {
-          title: postTitle.value,
-          content: postContent.value,
+          title: newTitle,
+          content: newContent,
         });
         console.log("Document written with ID: ", docRef.id);
         this.postTitle = '';
