@@ -1,0 +1,144 @@
+ <!--Author: Sarmed Shaya--> 
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Create a Post</title>
+     <style>
+         body {
+             font-family: Arial, sans-serif;
+             background-color: #ffffff;
+             margin: 0;
+             padding: 0;
+         }
+ 
+         header {
+             background-color: #32a844;
+             color: #fff;
+             text-align: center;
+             padding: 10px 0;
+         }
+ 
+         h1 {
+             margin: 0;
+         }
+ 
+         .container {
+             max-width: 800px;
+             margin: 20px auto;
+             background-color: #fff;
+             padding: 20px;
+             border-radius: 5px;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+         }
+ 
+         form {
+             display: flex;
+             flex-direction: column;
+         }
+ 
+         label {
+             font-weight: bold;
+         }
+ 
+         input[type="text"],
+         textarea {
+             width: 100%;
+             padding: 10px;
+             margin: 5px 0;
+             border: 1px solid #ccc;
+             border-radius: 3px;
+       resize: none;
+         }
+ 
+         button {
+             background-color: #32a844;
+             color: #fff;
+             border: none;
+             padding: 10px 15px;
+             margin-top: 10px;
+             border-radius: 3px;
+             cursor: pointer;
+         }
+ 
+         button:hover {
+             background-color: #84ed80;
+         }
+     </style>
+ </head>
+ <body>
+     <header>
+         <h1>   
+            <div id="app">
+            <h4>{{ message }}</h4>
+              <div class="container"> 
+                  <label for="postTitle">Title</label>
+                  <input v-model="postTitle" type="text" id="postTitle" name="postTitle" placeholder="Enter the post title" required>&nbsp;
+      
+                  <label for="postContent">Body</label>
+                  <textarea v-model="postContent" id="postContent" name="postContent" rows="6" placeholder="Enter Content" required></textarea>      
+                  <button @click="createPost()">Create Post</button>
+              </div>
+            </div>
+         </h1>
+     </header>
+ </body>
+ </html>
+ 
+
+
+ 
+<!-- Your HTML code remains the same -->
+
+<script src="firebaseConfig.js"></script>
+<script type="module">
+  import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js'
+  import { getFirestore, addDoc, collection } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js'
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDF3cwg7r4L2kCG-GYFIQUbpZ8q6Fwbe14",
+    authDomain: "cps714-webforum.firebaseapp.com",
+    projectId: "cps714-webforum",
+    storageBucket: "cps714-webforum.appspot.com",
+    messagingSenderId: "962469603977",
+    appId: "1:962469603977:web:431057b5aba67c3a68b458",
+    measurementId: "G-T3B6L2FV3P"
+  };
+  
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const message = ref('Create Post');
+
+  createApp({
+    methods: {
+      async createPost() {
+      try {
+        var newTitle = document.getElementById("postTitle").value;
+        var newContent = document.getElementById("postContent").value;
+        console.log("in create post");
+          if((newTitle != '')&&(newContent != '')){
+            const docRef = await addDoc(collection(db, "userPosts"), {
+            title: newTitle,
+            content: newContent,
+          });
+          console.log("Document written with ID: ", docRef.id);
+          this.postTitle = '';
+          this.postContent = '';
+          }
+        } catch (error) {
+          console.error('Error creating post: ', error);
+        }
+      },
+    },
+    setup() {
+      return {
+        message,
+        postContent: ref(''),
+        postTitle: ref(''),
+        db,
+      };
+    },
+  }).mount('#app');
+</script>
