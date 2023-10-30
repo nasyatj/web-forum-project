@@ -20,7 +20,7 @@
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, getDocs } from "firebase/firestore"; 
+	import { collection, query, where, getDocs, addDoc } from "firebase/firestore"; 
 
 	export default {
 		data() {
@@ -40,16 +40,40 @@
 
 				const usersTable = collection(db, "users");
 				let q = query(usersTable, where('username', '==', this.username));
-				const querySnapshot = await getDocs(q);
+				let querySnapshot = await getDocs(q);
+				let temp = [];
 				querySnapshot.forEach(doc => {
-					console.log('document');
 					console.log(doc.id, '=>', doc.data());
+					temp.push(doc.id);
 				});
 
-				console.log('here');
+				if (temp.length > 0) {
+					alert('A user already exists with that username');
+					return;
+				}
 
 				q = query(usersTable, where('email', '==', this.email));
+				querySnapshot = await getDocs(q);
+				temp = [];
+				querySnapshot.forEach(doc => {
+					console.log(doc.id, '=>', doc.data());
+					temp.push(doc.id);
+				});
 
+				if (temp.length > 0) {
+					alert('A user already has registered with that email. Please navigate to the log-in page if that account belongs to you');
+					return;
+				}
+
+				await addDoc(collection(db, "users"), {
+					email: this.email,
+					password: this.password,
+					username: this.username
+				});
+
+				alert('Your account has been created!');
+
+				// https://stackoverflow.com/questions/42091805/add-event-listener-to-router-link-component-using-v-on-directive-vuejs
 			}
 		}
 	};
