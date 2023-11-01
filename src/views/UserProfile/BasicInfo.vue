@@ -63,6 +63,7 @@
 
                 this.$emit('updateUsername', this.newUsername);
                 alert('Your username has been updated');
+                this.newUsername = '';
             },
             async handleUpdateEmail() {
                 if (this.newEmail != this.confirmNewEmail) {
@@ -93,7 +94,6 @@
                 this.currentEmail = this.newEmail;
 
                 alert('Your email has been updated');
-                this.newUsername = '';
                 this.newEmail = '';
                 this.confirmNewEmail = '';
             }
