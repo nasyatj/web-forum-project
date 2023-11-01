@@ -9,6 +9,7 @@
 			<!-- Shown if user is logged in -->
 			<span v-show="isUserLoggedIn">Welcome, {{ loggedInUsername }}!</span>
 			<button v-show="isUserLoggedIn" @click="logout">Log Out</button>
+			<router-link to="/user-profile/basic-info" v-show="isUserLoggedIn">Your Profile</router-link>
 		</nav>
 	</header>
 
@@ -21,6 +22,7 @@
 		v-bind:isUserLoggedIn="isUserLoggedIn"
 		v-bind:loggedInUsername="loggedInUsername"
 		@updateLogInStatus="updateLogInStatus"
+		@updateUsername="updateUsername"
 	/>
 </template>
 
@@ -36,6 +38,9 @@
 			updateLogInStatus(isUserLoggedIn, loggedInUsername) {
 				this.isUserLoggedIn = isUserLoggedIn;
 				this.loggedInUsername = loggedInUsername;
+			},
+			updateUsername(newUsername) {
+				this.loggedInUsername = newUsername;
 			},
 			logout() {
 				this.isUserLoggedIn = false;

@@ -3,6 +3,11 @@ import Home from '../views/Home.vue';
 import SignUp from '../views/SignUp.vue';
 import SignIn from '../views/SignIn.vue';
 
+import UserProfile from '../views/UserProfile/UserProfile.vue';
+import BasicInfo from '../views/UserProfile/BasicInfo.vue';
+import ChangePassword from '../views/UserProfile/ChangePassword.vue';
+import UserPosts from '../views/UserProfile/UserPosts.vue';``
+
 const routes = [
 	{
 		path: '/',
@@ -18,6 +23,28 @@ const routes = [
 		path: '/sign-in',
 		name: 'sign-in',
 		component: SignIn
+	},
+	{
+		path: '/user-profile',
+		name: 'user-profile',
+		component: UserProfile,
+		children: [
+			{
+				path: 'basic-info',
+				name: 'basic-info',
+				component: BasicInfo
+			},
+			{
+				path: 'change-password',
+				name: 'change-password',
+				component: ChangePassword
+			},
+			{
+				path: 'user-posts',
+				name: 'user-posts',
+				component: UserPosts
+			},
+		]
 	},
 ];
 
