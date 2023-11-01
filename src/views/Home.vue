@@ -1,23 +1,18 @@
 <template>
-	<div class="home">
-		
-		
-	</div>
+	<h2>Home Page</h2>
+	<p>Is User Logged In: {{ isUserLoggedIn }}</p>
+	<p>Username: {{ loggedInUsername }}</p>
 </template>
 
 <script>
-	import HelloWorld from '@/components/HelloWorld.vue'
-
 	export default {
-		name: 'HomeView',
-		components: {
-			HelloWorld
-		}
+		props: [
+			'isUserLoggedIn',
+			'loggedInUsername'
+		]
 	}
 </script>
 
 <style>
 	
 </style>
-
-
