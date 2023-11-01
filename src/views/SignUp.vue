@@ -20,7 +20,7 @@
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, getDocs, addDoc } from "firebase/firestore"; 
+	import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 	export default {
 		data() {
@@ -63,8 +63,12 @@
 
 				alert('Your account has been created!');
 
-				// https://stackoverflow.com/questions/42091805/add-event-listener-to-router-link-component-using-v-on-directive-vuejs
-				// global variables vue
+				// https://www.danvega.dev/blog/2019/06/05/triggering-events-router-vue/
+				// global variables vue, or use vuex store
+
+				this.$emit('updateLogInStatus', true, this.username);
+
+				this.$router.push({ name: 'home' });
 			}
 		}
 	};
@@ -84,7 +88,7 @@
 	}
 
 	button {
-		padding: 10px;
+		padding: 10px 20px;
 		margin: 10px;
 	}
 </style>

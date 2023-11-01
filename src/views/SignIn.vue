@@ -2,8 +2,8 @@
 	<h2>Sign in to your account</h2>
 
 	<form @submit.prevent="handleSubmit">
-		<label>Username or Email:</label>
-		<input type="text" required v-model="usernameOrEmail">
+		<label>Username:</label>
+		<input type="text" required v-model="username">
 
 		<label>Password:</label>
 		<input type="password" required v-model="password">
@@ -19,15 +19,14 @@
 	export default {
 		data() {
 			return {
-				usernameOrEmail: '',
+				username: '',
 				password: '',
 			}
 		},
 		methods: {
 			async handleSubmit() {
 				const usersTable = collection(db, "users");
-				let q = query(usersTable, or(and(where('username', '==', this.usernameOrEmail), where('password', '==', this.password)), 
-				                             and(where('email', '==', this.usernameOrEmail), where('password', '==', this.password))));
+				let q = query(usersTable, and(where('username', '==', this.username), where('password', '==', this.password))); 
 				let querySnapshot = await getDocs(q);
 
 				if (querySnapshot.size == 0) {
@@ -37,8 +36,9 @@
 
 				alert('You are now logged in!');
 
-				// https://stackoverflow.com/questions/42091805/add-event-listener-to-router-link-component-using-v-on-directive-vuejs
-				// global variables vue
+				this.$emit('updateLogInStatus', true, this.username);
+
+				this.$router.push({ name: 'home' });
 			}
 		}
 	};
@@ -58,7 +58,7 @@
 	}
 
 	button {
-		padding: 10px;
+		padding: 10px 20px;
 		margin: 10px;
 	}
 </style>
