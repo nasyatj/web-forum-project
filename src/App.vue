@@ -10,6 +10,8 @@
 			<span v-show="isUserLoggedIn">Welcome, {{ loggedInUsername }}!</span>
 			<button v-show="isUserLoggedIn" @click="logout">Log Out</button>
 			<router-link to="/user-profile/basic-info" v-show="isUserLoggedIn">Your Profile</router-link>
+
+			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 		</nav>
 	</header>
 
@@ -85,5 +87,10 @@
 
 	nav a.router-link-exact-active {
 		color: #42b983;
+	}
+
+	/* quill editor toolbar */
+	.ql-toolbar.ql-snow {
+		text-align: left;
 	}
 </style>

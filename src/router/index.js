@@ -8,6 +8,8 @@ import BasicInfo from '../views/UserProfile/BasicInfo.vue';
 import ChangePassword from '../views/UserProfile/ChangePassword.vue';
 import UserPosts from '../views/UserProfile/UserPosts.vue';``
 
+import CreatePost from '../views/CreatePost.vue';
+
 const routes = [
 	{
 		path: '/',
@@ -46,6 +48,11 @@ const routes = [
 			},
 		]
 	},
+	{
+		path: '/create-post',
+		name: 'create-post',
+		component: CreatePost
+	}
 ];
 
 const router = createRouter({
