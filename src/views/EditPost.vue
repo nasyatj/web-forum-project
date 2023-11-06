@@ -1,22 +1,15 @@
 <template>
-    <h2>Create a New Post</h2>
+    <h2>Edit Post</h2>
 
-	<form @submit.prevent="handlePost">
+	<form action="#" @submit.prevent="">
         <h3>Title: </h3>
         <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" required />
 
         <h3>Content:</h3>
         <QuillEditor v-model:content="content" content-type="html" required />
 
-
-        <!-- placeholder for later
-        <label for="target-community">In which of your communities would you like to post this?</label>
-        <select name="target-community">
-            <option value="default">General Home Page (default)</option>
-        </select>
-        -->
-
-        <button type="submit">Post</button>
+        <button @click="handleSave">Save</button>
+        <button @click="navigateBack">Cancel</button>
 	</form>
 </template>
 
@@ -25,7 +18,7 @@
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
     import { db } from '@/firebase';
-	import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+	import { collection, query, where, getDocs, addDoc, getDoc, doc, updateDoc } from "firebase/firestore";
 
 
 	export default {
@@ -39,23 +32,32 @@
             QuillEditor
         },
 		props: [
+            'postID',
 			'isUserLoggedIn',
 			'loggedInUsername'
 		],
         methods: {
-            async handlePost() {
-				await addDoc(collection(db, "userPosts"), {
-					titleHTML: this.title,
+            async handleSave() {
+                await updateDoc(doc(db, 'userPosts', this.postID), {
+                    titleHTML: this.title,
                     contentHTML: this.content,
-                    postDate: new Date().toJSON().slice(0, 10),
-                    authorUsername: this.loggedInUsername,
-                    lastEdited: ''
-				});
+                    lastEdited: new Date().toJSON().slice(0, 10),
+                });
 
-                alert('Your post has been successfully posted');
+                alert('Your post has been successfully updated');
                 this.title = '';
                 this.content = '';
+
+                this.navigateBack();
+            },
+            async navigateBack() {
+                this.$router.push({ name: 'user-posts' });
             }
+        },
+        async mounted() {
+            const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
+            this.title = docSnapshot.data().titleHTML;
+            this.content = docSnapshot.data().contentHTML;
         }
 	}
 </script>

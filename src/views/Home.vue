@@ -8,16 +8,18 @@
 	<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 
 	<div id="posts-container">
-		<div v-for="post in posts" :key="post.authorUsername" class="post">
-			<h2 v-html="post.titleHTML" class="post-title"></h2>
-			<div class="post-metadata">
-				<span class="post-author">Author: {{ post.authorUsername }}</span> |
-				<span class="post-date">Created on {{ post.postDate }}</span>
-			</div>
-			<p v-html="post.contentHTML" class="post-content"></p>
-
-			<!-- add router-link to post details later (to details about post such as comments, etc.) -->
+		<div v-for="post in posts" :key="post.id" class="post">
+			<router-link :to="{ name: 'post-details', params: { postID: post.id, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">
+				<div class="post-metadata">
+					<span class="post-author">{{ post.authorUsername }}</span> |
+					<span class="post-date">{{ post.postDate }}</span>
+					<span v-if="post.lastEdited != ''" class="post-last-edited-date">Last edited: {{ post.lastEdited }}</span>
+				</div>
+				<h2 v-html="post.titleHTML" class="post-title"></h2>
+				<p v-html="post.contentHTML" class="post-content"></p>
+			</router-link>
 		</div>
+
 		<!-- pagination button to be added later
 		<button>Load More</button>
 		-->
@@ -47,15 +49,17 @@
 		async mounted() {
 			this.posts = [];
 
-			let q = query(collection(db, 'userPosts'), orderBy('postDate'));
+			let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
 			let querySnapshot = await getDocs(q);
 
 			querySnapshot.forEach(doc => {
 				this.posts.push({
+					id: doc.id,
 					titleHTML: doc.data().titleHTML,
 					contentHTML: doc.data().contentHTML,
 					postDate: doc.data().postDate,
-					authorUsername: doc.data().authorUsername
+					authorUsername: doc.data().authorUsername,
+					lastEdited: doc.data().lastEdited
 				});
 			});
 
@@ -92,20 +96,15 @@
 		padding: 10px;
 	}
 
-	.posts-container {
-		
-	}
-
 	.post {
-		border: 1px solid rgba(0, 0, 0, 0.4);
+		border: 1px solid black;
 		text-align: left;
-		padding: 20px;
 		max-width: 600px;
-		margin: auto;
+		margin: 10px auto;
 	}
 
 	.post-metadata {
-		font-size: 12px;
+		font-size: 16px;
 	}
 
 	.post-title {
@@ -115,5 +114,15 @@
 
 	.post-content {
 		margin-top: 30px;
+	}
+
+	.post a {
+		color: default;
+		text-decoration: none;
+		color: black;
+	}
+
+	.post-last-edited-date {
+		display: block;
 	}
 </style>

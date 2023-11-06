@@ -9,6 +9,8 @@ import ChangePassword from '../views/UserProfile/ChangePassword.vue';
 import UserPosts from '../views/UserProfile/UserPosts.vue';``
 
 import CreatePost from '../views/CreatePost.vue';
+import PostDetails from '../views/PostDetails.vue';
+import EditPost from '../views/EditPost.vue';
 
 const routes = [
 	{
@@ -52,6 +54,18 @@ const routes = [
 		path: '/create-post',
 		name: 'create-post',
 		component: CreatePost
+	},
+	{
+		path: '/post-details/:postID',
+		name: 'post-details',
+		component: PostDetails,
+		props: true,
+	},
+	{
+		path: '/edit-post/:postID',
+		name: 'edit-post',
+		component: EditPost,
+		props: true,
 	}
 ];
 
