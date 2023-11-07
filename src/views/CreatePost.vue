@@ -4,7 +4,9 @@
 	<form @submit.prevent="handlePost">
         <h3>Title: </h3>
         <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" required />
-
+        
+        <h3>Community:</h3>
+        <input v-model="targetCommunity" content-type="text" required/>
         <h3>Content:</h3>
         <QuillEditor v-model:content="content" content-type="html" required />
 
@@ -33,6 +35,7 @@
 			return {
                 title: '',
                 content: '',
+                targetCommunity: '',
 			}
 		},
         components: {
@@ -48,12 +51,14 @@
 					titleHTML: this.title,
                     contentHTML: this.content,
                     postDate: new Date().toJSON().slice(0, 10),
+                    community: this.targetCommunity,
                     authorUsername: this.loggedInUsername
 				});
 
                 alert('Your post has been successfully posted');
                 this.title = '';
                 this.content = '';
+                this.targetCommunity = '';
             }
         }
 	}
