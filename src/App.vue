@@ -12,6 +12,7 @@
 			<router-link to="/user-profile/basic-info" v-show="isUserLoggedIn">Your Profile</router-link>
 
 			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
+			<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
 		</nav>
 	</header>
 

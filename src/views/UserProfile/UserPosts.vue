@@ -25,6 +25,13 @@
 </template>
 
 <script>
+    // need cookies to store login state, add time to dates, make post a component, like/dislike posts, make all posts part of communities
+    // search component, rediio interface (sidebar to the right, search on top), homepage (trending posts if not logged in, most recent posts if logged in on top )
+    // add images to post, user profile pictures
+    
+    // https://framework7.io/vue/introduction
+    // https://vuetifyjs.com/en/components/navigation-drawers/#location
+
     import { QuillEditor } from '@vueup/vue-quill';
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
 

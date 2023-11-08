@@ -12,6 +12,9 @@ import CreatePost from '../views/CreatePost.vue';
 import PostDetails from '../views/PostDetails.vue';
 import EditPost from '../views/EditPost.vue';
 
+import CreateCommunity from '../views/CreateCommunity.vue';
+import Communities from '../views/Communities.vue';
+
 const routes = [
 	{
 		path: '/',
@@ -66,7 +69,18 @@ const routes = [
 		name: 'edit-post',
 		component: EditPost,
 		props: true,
-	}
+	},
+	{
+		path: '/create-community',
+		name: 'create-community',
+		component: CreateCommunity,
+	},
+	{
+		path: '/communities/:communityName',
+		name: 'communities',
+		component: Communities,
+		props: true,
+	},
 ];
 
 const router = createRouter({

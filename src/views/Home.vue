@@ -8,7 +8,7 @@
 	<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 
 	<div id="posts-container">
-		<div v-for="post in posts" :key="post.id" class="post">
+		<div v-for="post in posts" :key="post.id" class="post" ref="posts">
 			<router-link :to="{ name: 'post-details', params: { postID: post.id, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">
 				<div class="post-metadata">
 					<span class="post-author">{{ post.authorUsername }}</span> |
@@ -18,12 +18,16 @@
 				<h2 v-html="post.titleHTML" class="post-title"></h2>
 				<p v-html="post.contentHTML" class="post-content"></p>
 			</router-link>
-		</div>
 
-		<!-- pagination button to be added later
-		<button>Load More</button>
-		-->
+			<button class="like-button" @click="like(post.id)" v-show="isUserLoggedIn">Like</button>
+			<span class="likes-count">{{ post.likes.length }} likes</span>
+			<button class="dislike-button" @click="dislike(post.id)" v-show="isUserLoggedIn">Dislike</button>
+			<span class="dislikes-count">{{ post.dislikes.length }} dislikes</span>
+		</div>
 	</div>
+
+	<!-- pagination button to be added later -->
+	<!-- <button>Load More</button> -->
 </template>
 
 <script>
@@ -45,6 +49,13 @@
 			handleSearch() {
 				// perform search
 			},
+			async like(postID) {
+				const docSnapshot = await getDoc(doc(db, 'userPosts', postID));
+				
+			},
+			dislike(postID) {
+
+			},
 		},
 		async mounted() {
 			this.posts = [];
@@ -59,24 +70,13 @@
 					contentHTML: doc.data().contentHTML,
 					postDate: doc.data().postDate,
 					authorUsername: doc.data().authorUsername,
-					lastEdited: doc.data().lastEdited
+					lastEdited: doc.data().lastEdited,
+					likes: doc.data().likes,
+					dislikes: doc.data().dislikes,
 				});
 			});
 
-			console.log(querySnapshot.size);
-
-			/* pagination to be added later 
-			// get first page of documents
-			const first = query(collection(db, 'userPosts'), orderBy('postDate'), limit(5));
-			const documentSnapshots = await getDocs(first);
-
-			// get the last visible document
-			const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-			// construct a new query starting at this document
-			// get the next 5 posts
-			const next = query(collection(db, 'userPosts'), orderBy('postDate'), limit(5), startAfter(lastVisible));
-			*/
+			// pagination to be added later: https://firebase.google.com/docs/firestore/query-data/query-cursors
 		}
 	}
 </script>
@@ -124,5 +124,9 @@
 
 	.post-last-edited-date {
 		display: block;
+	}
+
+	.likes-count, .dislikes-count {
+		margin-right: 5px;
 	}
 </style>
