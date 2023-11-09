@@ -57,6 +57,9 @@
                     moderators: [this.loggedInUsername],
                     guidelines: [],
                     creator: this.loggedInUsername,
+                    members: [this.loggedInUsername],
+                    membersLength: 1,  // always update this value when adding or removing users from members list 
+                                       // firebase doest not let you query on array sizes, which is why this field was created
 				});
 
                 alert('Your community has been succesfully created');

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    // need cookies to store login state, add time to dates, make post a component, like/dislike posts, make all posts part of communities
+    // need cookies to store login state, add time to dates, make post and sidebar components, like/dislike posts, make all posts part of communities
     // search component, rediio interface (sidebar to the right, search on top), homepage (trending posts if not logged in, most recent posts if logged in on top )
     // add images to post, user profile pictures
     

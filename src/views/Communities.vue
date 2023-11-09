@@ -1,9 +1,9 @@
 <template>
     <!-- need to add a search bar to search within community and dropdowns to sort by various post properties like date, likes, etc. -->
     
+    <!-- put this info in a side bar-->
     <h2 v-html="communityName"></h2>
     <p v-html="communityDescription"></p>
-
     <button id="join-community">Join Community</button>
 
 	<div id="posts-container">
