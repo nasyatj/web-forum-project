@@ -31,57 +31,39 @@
 						<p v-html="post.contentHTML" class="post-content"></p>
 					</router-link>
 
-					<button class="like-button" @click="like(post.id)" v-show="isUserLoggedIn">Like</button>
+					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">Like</button>
 					<span class="likes-count">{{ post.likes.length }} likes</span>
-					<button class="dislike-button" @click="dislike(post.id)" v-show="isUserLoggedIn">Dislike</button>
-					<span class="dislikes-count">{{ post.dislikes.length }} dislikes</span>
 				</div>
 			</div>
 		</div>
 		
-		<div class="sidebar">
-			<div class="sidebar-content">
-				<div class="sidebar-community-info">
-					<h3>Home</h3>
-					<p>Your personal page showing latest posts from communities you've joined and the latest trending posts</p>
-				</div>
-				<div class="sidebar-links">
-					<div v-show="!isUserLoggedIn">
-						<router-link to="/sign-up" v-show="!isUserLoggedIn">Sign Up</router-link>
-						<router-link to="/sign-in" v-show="!isUserLoggedIn">Sign In</router-link>
-					</div>
-					<div v-show="isUserLoggedIn">
-						<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
-						<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
-					</div>
-				</div>
-				<div class="sidebar-popular-communities">
-					<h3>Popular Communities</h3>
-					<router-link v-for="topCommunity in topCommunities" :to="{ name: 'communities', params: { communityName: topCommunity.name, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }}">
-						<h4>{{ topCommunity.name }}</h4>
-						<p>{{ topCommunity.numOfMembers }} members</p>
-					</router-link>
-				</div>
-			</div>
-		</div>
+		<Sidebar 
+			:isUserLoggedIn="isUserLoggedIn"
+			:loggedInUsername="loggedInUsername"
+			:isCommunitySidebar="false"
+		/>
 
-		<!-- pagination button to be added later -->
-		<!-- <button>Load More</button> -->
-
+		<!-- pagination button to be added later
+		<button>Load More</button> 
+		-->
 	</div>
 </template>
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, getDocs, addDoc, orderBy, startAfter, limit } from "firebase/firestore";
+	import { collection, query, where, getDocs, addDoc, orderBy, startAfter, limit, getDoc, doc, updateDoc } from "firebase/firestore";
+
+	import Sidebar from '@/components/Sidebar.vue';
 
 	export default {
 		data() {
 			return {
-				lastVisibleDocument: '',
 				posts: [],
 				topCommunities: [],
 			}
+		},
+		components: {
+			Sidebar
 		},
 		props: [
 			'isUserLoggedIn',
@@ -91,45 +73,57 @@
 			handleSearch() {
 				// perform search
 			},
-			async like(postID) {
-				const docSnapshot = await getDoc(doc(db, 'userPosts', postID));
+			async like(postID, isLikedByCurrentUser) {
+				let updatedLikes = [];
 
-			},
-			dislike(postID) {
+				this.posts.forEach((post, index) => {
+					if (post.id == postID) {
+						// unlike
+						if (isLikedByCurrentUser == true)
+							post.likes = post.likes.filter(username => { return username != this.loggedInUsername; });
+						// like
+						else 
+							post.likes.push(this.loggedInUsername);
 
+						updatedLikes = post.likes;
+						post.isLikedByCurrentUser = !isLikedByCurrentUser;
+					}
+				});
+
+				await updateDoc(doc(db, 'userPosts', postID), {
+					likes: updatedLikes
+				});
 			},
 		},
 		async mounted() {
-			// get random posts right now, but need to be ordered by trending most reecently
+			// get most recent posts right now, but need to be ordered by likes most reecently (add like/dislike)
 			this.posts = [];
 
 			let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
 			let querySnapshot = await getDocs(q);
 			querySnapshot.forEach(doc => {
+				let isLikedByCurrentUser = false;
+				if (this.isUserLoggedIn == true) {
+					doc.data().likes.forEach(likedByUsername => {
+						if (likedByUsername == this.loggedInUsername) {
+							isLikedByCurrentUser = true;
+							return;
+						}
+					});
+				}
 				this.posts.push({
 					id: doc.id,
 					titleHTML: doc.data().titleHTML,
 					contentHTML: doc.data().contentHTML,
-					postDate: doc.data().postDate,
+					postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
 					authorUsername: doc.data().authorUsername,
-					lastEdited: doc.data().lastEdited,
+					lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
 					likes: doc.data().likes,
 					dislikes: doc.data().dislikes,
 					community: doc.data().community,
+					isLikedByCurrentUser: isLikedByCurrentUser,
 				});
 			});
-
-
-			// get popular communities
-			q = query(collection(db, 'communities'), orderBy('membersLength', 'desc'), limit(4));
-			querySnapshot = await getDocs(q);
-			querySnapshot.forEach(doc => {
-				this.topCommunities.push({
-					name: doc.data().name,
-					numOfMembers: doc.data().membersLength,
-				});
-			});
-
 
 			// pagination to be added later: https://firebase.google.com/docs/firestore/query-data/query-cursors
 		}
@@ -146,34 +140,6 @@
 
 	.main-content {
 		text-align: left;
-	}
-
-	.sidebar {
-		text-align: left;
-	}
-
-	.sidebar-content {
-		padding: 10px;
-		margin: 10px;
-		max-width: 100%;
-		position: sticky;
-		top: 20%;
-		border: 1px solid black;
-	}
-
-	.sidebar-links a {
-		display: block;
-		border: 1px solid black;
-		padding: 20px;
-	}
-
-	.sidebar-popular-communities a {
-		text-decoration: none;
-		color: black;
-	}
-
-	.sidebar-popular-communities h4 {
-		margin-bottom: -10px;
 	}
 
 	form {
@@ -214,6 +180,7 @@
 		color: default;
 		text-decoration: none;
 		color: black;
+
 	}
 
 	.post-last-edited-date {
@@ -228,5 +195,6 @@
 		display: block;
 		color: blue !important;
 		margin-top: 10px;
+		text-decoration: underline !important;
 	}
 </style>

@@ -67,9 +67,9 @@
                         id: doc.id,
                         titleHTML: doc.data().titleHTML,
                         contentHTML: doc.data().contentHTML,
-                        postDate: doc.data().postDate,
+                        postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
                         authorUsername: doc.data().authorUsername,
-                        lastEdited: doc.data().lastEdited
+                        lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : ''
                     });
                 });
             }

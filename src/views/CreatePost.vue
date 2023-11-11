@@ -6,7 +6,7 @@
         <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" required />
 
         <h3>Content:</h3>
-        <QuillEditor v-model:content="content" content-type="html" required />
+        <QuillEditor v-model:content="content" content-type="html" />
 
         <!-- need to get limited amount and dynamically search instead of dropdown with all communities later -->
         <h3>Community to post in:</h3>
@@ -47,7 +47,7 @@
 				await addDoc(collection(db, "userPosts"), {
 					titleHTML: this.title,
                     contentHTML: this.content,
-                    postDate: new Date().toJSON().slice(0, 10),
+                    postDate: new Date(),
                     authorUsername: this.loggedInUsername,
                     lastEdited: '',
                     likes: [],

@@ -29,33 +29,16 @@
             </div>
         </div>
 
-        <div class="sidebar">
-            <div class="sidebar-content">
-				<div class="sidebar-community-info">
-                    <h3>{{ this.community }}</h3>
-					<p>{{ this.communityDescription }}</p>
-				</div>
-
-				<div class="sidebar-links">
-					<div v-show="!isUserLoggedIn">
-						<router-link to="/sign-up" v-show="!isUserLoggedIn">Sign Up</router-link>
-						<router-link to="/sign-in" v-show="!isUserLoggedIn">Sign In</router-link>
-					</div>
-					<div v-show="isUserLoggedIn">
-						<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
-						<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
-					</div>
-				</div>
-
-				<div class="sidebar-popular-communities">
-					<h3>Popular Communities</h3>
-					<router-link v-for="topCommunity in topCommunities" :to="{ name: 'communities', params: { communityName: topCommunity.name, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }}">
-						<h4>{{ topCommunity.name }}</h4>
-						<p>{{ topCommunity.numOfMembers }} members</p>
-					</router-link>
-				</div>
-			</div>
-        </div>
+        <Sidebar
+            :isUserLoggedIn="isUserLoggedIn"
+			:loggedInUsername="loggedInUsername"
+			:isCommunitySidebar="true"
+            :communityName="communityName"
+            :communityDescription="communityDescription"
+            :communityGuidelines="communityGuidelines"
+            :communityModerators="communityModerators"
+            :numOfMembers="numOfMembers"
+        />
     </div>
 </template>
 
@@ -65,6 +48,8 @@
 
     import { db } from '@/firebase';
 	import { doc, getDoc, collection, getDocs, addDoc, query, orderBy, where, limit } from "firebase/firestore";
+
+    import Sidebar from '@/components/Sidebar.vue';
 
     export default {
         data() {
@@ -81,12 +66,11 @@
                 dislikes: [],
 
                 // community info
-                community: '',
+                communityName: '',
                 communityDescription: '',
                 communityGuidelines: [],
                 communityModerators: [],
                 numOfMembers: 0,
-                topCommunities: [],
             }
         },
         props: [
@@ -95,7 +79,8 @@
 			'loggedInUsername'
         ],
         components: {
-            QuillEditor
+            QuillEditor,
+            Sidebar
         },
         async mounted() {
             this.topCommunities = [];
@@ -104,30 +89,20 @@
             const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
             this.titleHTML = docSnapshot.data().titleHTML;
             this.contentHTML = docSnapshot.data().contentHTML;
-            this.postDate = docSnapshot.data().postDate;
+            this.postDate = docSnapshot.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
             this.authorUsername = docSnapshot.data().authorUsername;
-            this.lastEdited = docSnapshot.data().lastEdited;
+            this.lastEdited = docSnapshot.data().lastEdited != '' ? docSnapshot.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
             this.likes = docSnapshot.data().likes;
             this.dislikes=  docSnapshot.data().dislikes;
-            this.community = docSnapshot.data().community;
+            this.communityName = docSnapshot.data().community;
 
-            // get community info to render in sidebar
-            let q = query(collection(db, 'communities'), where('name', '==', this.community));
+            // get community info to pass to sidebar component
+            let q = query(collection(db, 'communities'), where('name', '==', this.communityName));
             let communitySnapshot = await getDocs(q);
             this.communityDescription = communitySnapshot.docs[0].data().description;
             this.communityGuidelines = communitySnapshot.docs[0].data().guidelines;
             this.communityModerators = communitySnapshot.docs[0].data().moderators;
             this.numOfMembers = communitySnapshot.docs[0].data().membersLength;
-
-            // get popular communities
-            q = query(collection(db, 'communities'), orderBy('membersLength', 'desc'), limit(4));
-            let querySnapshot = await getDocs(q);
-            querySnapshot.forEach(doc => {
-                this.topCommunities.push({
-                    name: doc.data().name,
-                    numOfMembers: doc.data().membersLength,
-                });
-            });
 
             await this.fetchComments();
         },

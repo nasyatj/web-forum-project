@@ -1,8 +1,8 @@
-need cookies to store login state, 
+need cookies or vuex to store login state, 
 add time to dates, 
 make post and sidebar components, 
 like/dislike posts,
-search component, 
+search component inside communities, 
 rediio interface (sidebar to the right, search on top, and on postdetails page), 
 homepage (trending posts if not logged in, most recent posts if logged in on top)
 add images to post, user profile pictures

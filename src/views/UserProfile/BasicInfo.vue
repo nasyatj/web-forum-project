@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleUpdateUsername">
+    <form @submit.prevent="updateUsername">
         <label>Current Username: {{ loggedInUsername }}</label>
 
 		<label>New Username:</label>
@@ -10,7 +10,7 @@
 
     <br>
 
-    <form @submit.prevent="handleUpdateEmail">
+    <form @submit.prevent="updateEmail">
         <label>Current Email: {{ currentEmail }}</label>
 
 		<label>New Email:</label>
@@ -21,6 +21,13 @@
 
 		<button type="submit">Update Email</button>
 	</form>
+
+    <br>
+
+    <form @submit.prevent="updateProfilePhoto">
+        <input type="file" ref="profile-photo" accept='image/*' required>
+        <button type="submit">Update Photo</button>
+    </form>
 </template>
 
 <script>
@@ -40,7 +47,7 @@
 			'loggedInUsername'
 		],
         methods: {
-            async handleUpdateUsername() {
+            async updateUsername() {
                 const usersTable = collection(db, "users");
 				let q = query(usersTable, where('username', '==', this.newUsername));
 				let querySnapshot = await getDocs(q);
@@ -65,7 +72,7 @@
                 alert('Your username has been updated');
                 this.newUsername = '';
             },
-            async handleUpdateEmail() {
+            async updateEmail() {
                 if (this.newEmail != this.confirmNewEmail) {
                     alert('Emails do not match');
                     return;
