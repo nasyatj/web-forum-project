@@ -41,7 +41,7 @@
                 await updateDoc(doc(db, 'userPosts', this.postID), {
                     titleHTML: this.title,
                     contentHTML: this.content,
-                    lastEdited: new Date().toJSON().slice(0, 10),
+                    lastEdited: new Date(),
                 });
 
                 alert('Your post has been successfully updated');

@@ -6,15 +6,13 @@
         <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" required />
 
         <h3>Content:</h3>
-        <QuillEditor v-model:content="content" content-type="html" required />
+        <QuillEditor v-model:content="content" content-type="html" />
 
-
-        <!-- placeholder for later
-        <label for="target-community">In which of your communities would you like to post this?</label>
-        <select name="target-community">
-            <option value="default">General Home Page (default)</option>
+        <!-- need to get limited amount and dynamically search instead of dropdown with all communities later -->
+        <h3>Community to post in:</h3>
+        <select class="select-community" v-model="selectedCommunity" required>
+            <option v-for="community in communities" :value="community.name" class="select-community-options">{{ community.name }}</option>
         </select>
-        -->
 
         <button type="submit">Post</button>
 	</form>
@@ -33,6 +31,8 @@
 			return {
                 title: '',
                 content: '',
+                selectedCommunity: '',
+                communities: [],
 			}
 		},
         components: {
@@ -47,15 +47,30 @@
 				await addDoc(collection(db, "userPosts"), {
 					titleHTML: this.title,
                     contentHTML: this.content,
-                    postDate: new Date().toJSON().slice(0, 10),
+                    postDate: new Date(),
                     authorUsername: this.loggedInUsername,
-                    lastEdited: ''
+                    lastEdited: '',
+                    likes: [],
+                    dislikes: [],
+                    community: this.selectedCommunity,
 				});
 
                 alert('Your post has been successfully posted');
                 this.title = '';
                 this.content = '';
             }
+        },
+        async mounted() {
+            let q = query(collection(db, 'communities'));
+            let querySnapshot = await getDocs(q);
+
+            querySnapshot.forEach(doc => {
+                this.communities.push({
+                    name: doc.data().name,
+                });
+            });
+
+            // need to get limited amount and dynamically search instead of dropdown with all communities later
         }
 	}
 </script>
@@ -76,4 +91,8 @@
 		margin: 10px;
 		padding: 10px 30px;
 	}
+
+    .select-community {
+        display: block;
+    }
 </style>

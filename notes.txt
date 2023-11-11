@@ -1,0 +1,13 @@
+need cookies or vuex to store login state, 
+add time to dates, 
+make post and sidebar components, 
+like/dislike posts,
+search component inside communities, 
+rediio interface (sidebar to the right, search on top, and on postdetails page), 
+homepage (trending posts if not logged in, most recent posts if logged in on top)
+add images to post, user profile pictures
+pin posts to the top
+post flairs (community creator will need to define similar to guidelines thing)
+    
+https://framework7.io/vue/introduction
+https://vuetifyjs.com/en/components/navigation-drawers/#location
