@@ -27,7 +27,7 @@
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, getDocs, addDoc, orderBy, startAfter, limit } from "firebase/firestore";
+	import { collection, query, where, getDocs, addDoc, orderBy, or, startAfter, limit } from "firebase/firestore";
 
 	export default {
 		data() {
@@ -43,16 +43,29 @@
 			'loggedInUsername'
 		],
 		methods: {
-			//search implemented here...
+			//algolia testing... to run try: npm install vue-instantsearch algoliasearch instantsearch.css
+			//search implemented here... title needs to be non html for string search to work, since firestore cant search for substrings without other using typesense,algolia, etc...
 			async search(){
+				this.posts = [];
+
 				console.log('In search... = ' + this.searchTerm);
 
-				const q = query(collection(db, "userPosts"), where('titleHTML', '==', this.searchTerm));
+				const q = query(collection(db, "userPosts"),  
+					or(where('titleHTML', '==', this.searchTerm),
+					where('authorUsername', '==', this.searchTerm),
+					where('community', '==', this.searchTerm)
+				)
+				);
 
 				const querySnapshot = await getDocs(q);
 
-				querySnapshot.forEach((doc) => {
-					console.log(doc.id, " => ", doc.data());
+				querySnapshot.forEach(doc => {
+					this.posts.push({
+						titleHTML: doc.data().titleHTML,
+						contentHTML: doc.data().contentHTML,
+						postDate: doc.data().postDate,
+						authorUsername: doc.data().authorUsername
+					});
 				});
         	},
 
