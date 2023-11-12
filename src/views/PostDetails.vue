@@ -132,6 +132,8 @@
         max-width: 600px;
         text-align: left;
         margin: auto;
+        background-color: gainsboro;
+        overflow-y: scroll;
     }
 
     .comment {

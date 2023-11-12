@@ -48,6 +48,11 @@ const routes = [
 				name: 'user-posts',
 				component: UserPosts
 			},
+			{
+				path: 'user-comments',
+				name: 'user-comments',
+				component: UserComments
+			},
 		]
 	},
 	{
@@ -65,6 +70,12 @@ const routes = [
 		path: '/edit-post/:postID',
 		name: 'edit-post',
 		component: EditPost,
+		props: true,
+	},
+	{
+		path: '/edit-comment/:commentID',
+		name: 'edit-coment',
+		component: EditComment,
 		props: true,
 	}
 ];
