@@ -1,9 +1,10 @@
 <template>
+
 	<form @submit.prevent="handleSearch">
-		<input type="text" id="search-bar" placeholder="Search for posts, users, and communities..." />
-		<button type="submit">Search</button>
+		<input v-model="searchTerm" type="text" id="search-bar" placeholder="Search for posts, users, and communities..." />
+		<button @click="search">Search</button>
 	</form>
-	
+
 	<h2 v-show="!isUserLoggedIn">Sign in to create posts and comment</h2>
 	<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 
@@ -31,6 +32,8 @@
 	export default {
 		data() {
 			return {
+				searchTerm: '',
+
 				lastVisibleDocument: '',
 				posts: [],
 			}
@@ -40,9 +43,19 @@
 			'loggedInUsername'
 		],
 		methods: {
-			handleSearch() {
-				// perform search
-			},
+			//search implemented here...
+			async search(){
+				console.log('In search... = ' + this.searchTerm);
+
+				const q = query(collection(db, "userPosts"), where('titleHTML', '==', this.searchTerm));
+
+				const querySnapshot = await getDocs(q);
+
+				querySnapshot.forEach((doc) => {
+					console.log(doc.id, " => ", doc.data());
+				});
+        	},
+
 		},
 		async mounted() {
 			this.posts = [];
