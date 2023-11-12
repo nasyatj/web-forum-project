@@ -1,0 +1,19 @@
+make post component
+dislike posts
+homepage (signed out -> most recent posts, signed in -> communities joined posts, then other posts)
+edit and delete comments
+
+need cookies or vuex to store login state
+search component inside communities
+add images to post, user profile pictures
+pin posts to the top
+post flairs
+community info (guidelines, etc)
+add doneLoading to places that need it
+edit community
+replace alerts with dialog notifications
+edit username problem (use seperate displaname)
+make sort work
+    
+https://framework7.io/vue/introduction
+https://vuetifyjs.com/en/components/navigation-drawers/#location

@@ -13,6 +13,19 @@
 
 			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 			<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
+
+			<div v-show="isUserLoggedIn" class="user-communities">
+				<span>Communities:</span>
+				<select ref="communitySelector" @change="navigateToCommunity(communitySelection)" v-model="communitySelection">
+					<option selected disabled value="">-- Select a community --</option>
+					<optgroup label="Created Communities">
+						<option v-for="createdCommunity in createdCommunities" :value="createdCommunity">{{ createdCommunity }}</option>
+					</optgroup>
+					<optgroup label="Joined Communities">
+						<option v-for="joinedCommunity in joinedCommunities" :value="joinedCommunity">{{ joinedCommunity }}</option>
+					</optgroup>
+				</select>
+			</div>
 		</nav>
 	</header>
 
@@ -30,17 +43,26 @@
 </template>
 
 <script>
+	import { db } from '@/firebase';
+	import { collection, query, where, getDocs, addDoc, orderBy, startAfter, limit, getDoc, doc, updateDoc } from "firebase/firestore";
+
 	export default {
 		data () {
 			return {
 				isUserLoggedIn: false,
-				loggedInUsername: ''
+				loggedInUsername: '',
+
+				// used when user logged in 
+				createdCommunities: [],
+				joinedCommunities: [],
+				communitySelection: '',
 			}
 		},
 		methods: {
 			updateLogInStatus(isUserLoggedIn, loggedInUsername) {
 				this.isUserLoggedIn = isUserLoggedIn;
 				this.loggedInUsername = loggedInUsername;
+				this.fetchUsersCommunities();
 			},
 			updateUsername(newUsername) {
 				this.loggedInUsername = newUsername;
@@ -50,7 +72,30 @@
 				this.loggedInUsername = '';
 				this.$router.push({ name: 'sign-in' });
 				alert('You are now logged out');
+			},
+			navigateToCommunity(communityName) {
+				this.$router.push({ name: 'communities', params: { communityName: communityName, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }});
+			},
+			async fetchUsersCommunities() {
+				if (this.isUserLoggedIn == true) {
+					this.createdCommunities = [];
+					this.joinedCommunities = [];
+
+					let q = query(collection(db, 'communities'), where('members', 'array-contains', this.loggedInUsername));
+					let querySnapshot = await getDocs(q);
+					querySnapshot.forEach(doc => {
+						if (doc.data().creator == this.loggedInUsername)
+							this.createdCommunities.push(doc.data().name);
+						else if (doc.data().members.includes(this.loggedInUsername))
+							this.joinedCommunities.push(doc.data().name);
+					});
+					this.createdCommunities.sort();
+					this.joinedCommunities.sort();
+				}
 			}
+		},
+		async mount() {
+			this.fetchUsersCommunities();
 		}
 	}
 </script>

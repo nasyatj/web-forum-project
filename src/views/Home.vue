@@ -180,7 +180,6 @@
 		color: default;
 		text-decoration: none;
 		color: black;
-
 	}
 
 	.post-last-edited-date {
