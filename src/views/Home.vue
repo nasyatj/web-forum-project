@@ -205,7 +205,7 @@
     }
 
 	.post {
-		border: 1px solid #008080; /* Teal Border */
+		border: 4px solid #008080; /* Teal Border */
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
