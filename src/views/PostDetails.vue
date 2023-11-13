@@ -182,6 +182,7 @@
     .post {
 		border: 1px solid black;
 		text-align: left;
+		padding-right: 20px; /* Add padding to the right for closer alignment */
 		max-width: 600px;
 		margin: 10px auto;
 	}
@@ -196,6 +197,8 @@
 	}
 
 	.post-content {
+		color: #FFFFFF; /* White Text */
+        	font-weight: bold; /* Optional: Makes post content text bolder */
 		margin-top: 30px;
 	}
 
