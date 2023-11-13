@@ -176,6 +176,7 @@
 		max-width: 900px;
 		grid-template-columns: 2fr 1fr;
 		margin: auto;
+		color: #008080; /* Teal Text */
 	}
 
 	.main-content {
@@ -189,15 +190,22 @@
 	form input {
 		padding: 10px;
 		width: 300px;
+		border: 1px solid #008080; /* Teal Border */
 	}
 
 	form button {
 		margin: 10px;
 		padding: 10px;
+		background-color: #FF7F50; /* Coral Background */
+        	color: #FFFFFF; /* White Text */
+        	border: none;
 	}
+	form button:hover {
+        background-color: #E6735A; /* Darker Coral on Hover */
+    }
 
 	.post {
-		border: 1px solid black;
+		border: 1px solid #008080; /* Teal Border */
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
@@ -217,9 +225,8 @@
 	}
 
 	.post a {
-		color: default;
-		text-decoration: none;
-		color: black;
+		color: #008080; /* Teal Link */
+        	text-decoration: none;
 	}
 
 	.post-last-edited-date {
@@ -232,7 +239,7 @@
 
 	.post-community {
 		display: block;
-		color: blue !important;
+		color: #FF7F50; /* Coral Link */
 		margin-top: 10px;
 		text-decoration: underline !important;
 	}
