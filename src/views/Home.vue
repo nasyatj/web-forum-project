@@ -1,9 +1,9 @@
 <template>
 	<div class="grid-container">
 		<div class="main-content">
-			<form class="search-bar" @submit.prevent="handleSearch">
-				<input type="text" placeholder="Search for posts, users, and communities..." />
-				<button type="submit">Search</button>
+			<form @submit.prevent="handleSearch">
+				<input v-model="searchTerm" type="text" id="search-bar" placeholder="Search for posts, users, and communities..." />
+				<button @click="search">Search</button>
 			</form>
 
 			<h2 v-show="!isUserLoggedIn">Sign in to create posts and comment</h2>
@@ -51,7 +51,7 @@
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, getDocs, addDoc, orderBy, startAfter, limit, getDoc, doc, updateDoc } from "firebase/firestore";
+	import { collection, query, where, or, getDocs, addDoc, orderBy, startAfter, limit, getDoc, doc,updateDoc } from "firebase/firestore";
 
 	import Sidebar from '@/components/Sidebar.vue';
 
@@ -70,9 +70,49 @@
 			'loggedInUsername'
 		],
 		methods: {
-			handleSearch() {
-				// perform search
+		async search() {
+				this.posts = [];
+
+				console.log('In search... = ' + this.searchTerm);
+
+				const q = query(collection(db, "userPosts"),
+					or(
+					where('titleHTML', '==', this.searchTerm),
+					where('authorUsername', '==', this.searchTerm),
+					where('community', '==', this.searchTerm)
+					)
+				);
+
+				const querySnapshot = await getDocs(q);
+
+				querySnapshot.forEach(doc => {
+					let isLikedByCurrentUser = false;
+					if (this.isUserLoggedIn) {
+					// Initialize isLikedByCurrentUser inside the forEach loop
+					isLikedByCurrentUser = doc.data().likes.includes(this.loggedInUsername);
+					}
+
+					this.posts.push({
+					id: doc.id,
+					titleHTML: doc.data().titleHTML,
+					contentHTML: doc.data().contentHTML,
+					postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+					authorUsername: doc.data().authorUsername,
+					lastEdited: doc.data().lastEdited !== '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+					likes: doc.data().likes,
+					dislikes: doc.data().dislikes,
+					community: doc.data().community,
+					isLikedByCurrentUser: isLikedByCurrentUser,
+					});
+				});
+
+				try {
+					// Code to handle the search results
+				} catch (error) {
+					console.error('Search Error: ', error);
+				}
 			},
+
 			async like(postID, isLikedByCurrentUser) {
 				let updatedLikes = [];
 
