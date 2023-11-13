@@ -104,42 +104,52 @@
 </script>
 
 <style>
-	#app {
-		font-family: Avenir, Helvetica, Arial, sans-serif;
-		text-align: center;
-		color: #2c3e50;
+    #app {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        text-align: center;
+        color: #008080; /* Teal Text */
+        background-color: #FFFFFF; /* White Background */
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        outline: none;
+    }
 
-		box-sizing: border-box;
-		margin: 0;
-		padding: 0;
-		outline: none;
-	}
+    header {
+        display: flex;
+        border-bottom: 1px solid #FF7F50; /* Coral Border */
+        background-color: #008080; /* Teal Background */
+        color: #FFFFFF; /* White Text */
+    }
 
-	header {
-		display: flex;
-		border-bottom: 1px solid #42b983;
-	}
+    nav {
+        display: flex;
+        padding: 20px;
+    }
 
-	nav {
-		display: flex;
-		padding: 20px;
-	}
+    nav a, nav span, nav button {
+        margin: 10px;
+        color: #FFFFFF; /* White Text */
+    }
 
-	nav a, nav span, nav button {
-		margin: 10px;
-	}
+    nav a {
+        font-weight: bold;
+    }
 
-	nav a {
-		font-weight: bold;
-		color: #2c3e50;
-	}
+    nav a.router-link-exact-active {
+        color: #FF7F50; /* Coral for Active Link */
+    }
 
-	nav a.router-link-exact-active {
-		color: #42b983;
-	}
+    nav button {
+        background-color: #FF7F50; /* Coral Background for Button */
+        color: #FFFFFF; /* White Text */
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
 
-	/* quill editor toolbar */
-	.ql-toolbar.ql-snow {
-		text-align: left;
-	}
+    nav button:hover {
+        background-color: #E6735A; /* Darker Coral on Hover */
+    }
 </style>
+
