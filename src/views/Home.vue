@@ -207,8 +207,10 @@
 	.post {
 		border: 4px solid #008080; /* Teal Border */
 		text-align: left;
+		background-color: #FF7F50; /* Coral Background */
 		max-width: 600px;
 		margin: 10px auto;
+		color: #FFFFFF; /* White text color */
 	}
 
 	.post-metadata {
@@ -222,6 +224,8 @@
 
 	.post-content {
 		margin-top: 30px;
+		font-weight: bold; /* Makes post content text bolder */
+		padding-right: 20px;
 	}
 
 	.post a {
