@@ -252,7 +252,7 @@
 	}
 
 	.post {
-		border: 1px solid black;
+		border: 4px solid black;
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
