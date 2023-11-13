@@ -63,6 +63,7 @@
 				this.isUserLoggedIn = isUserLoggedIn;
 				this.loggedInUsername = loggedInUsername;
 				this.fetchUsersCommunities();
+				this.$refs.communitySelector.value='';
 			},
 			updateUsername(newUsername) {
 				this.loggedInUsername = newUsername;
@@ -72,9 +73,11 @@
 				this.loggedInUsername = '';
 				this.$router.push({ name: 'sign-in' });
 				alert('You are now logged out');
+				this.$refs.communitySelector.value='';
 			},
 			navigateToCommunity(communityName) {
 				this.$router.push({ name: 'communities', params: { communityName: communityName, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }});
+				this.$refs.communitySelector.value='';
 			},
 			async fetchUsersCommunities() {
 				if (this.isUserLoggedIn == true) {
