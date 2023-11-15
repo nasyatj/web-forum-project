@@ -3,16 +3,22 @@
 
 	<form @submit.prevent="handlePost">
         <h3>Title: </h3>
-        <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" required />
+        <QuillEditor  :toolbar="['bold', 'italic']" v-model:content="title" content-type="html" ref="titleEditor" required />
 
         <h3>Content:</h3>
-        <QuillEditor v-model:content="content" content-type="html" />
+        <QuillEditor v-model:content="content" content-type="html" ref="contentEditor" required />
 
-        <!-- need to get limited amount and dynamically search instead of dropdown with all communities later -->
         <h3>Community to post in:</h3>
         <select class="select-community" v-model="selectedCommunity" required>
             <option v-for="community in communities" :value="community.name" class="select-community-options">{{ community.name }}</option>
         </select>
+
+        <div class="flair-selector" v-show="communityFlairs.length > 0">
+            <h3>Flair:</h3>
+            <select class="select-flair" v-model="selectedFlair">
+                <option v-for="flair in communityFlairs" :value="{ text: flair.text, color: flair.color }" class="select-flair-options" :style="{backgroundColor: flair.color}">{{ flair.text }}</option>
+            </select>
+        </div>
 
         <button type="submit">Post</button>
 	</form>
@@ -33,6 +39,8 @@
                 content: '',
                 selectedCommunity: '',
                 communities: [],
+                communityFlairs: [],
+                selectedFlair: {},
 			}
 		},
         components: {
@@ -42,17 +50,29 @@
 			'isUserLoggedIn',
 			'loggedInUsername'
 		],
+        watch: {
+            async selectedCommunity(newVal, oldVal) {
+                let q = query(collection(db, 'communities'), where('name', '==', newVal));
+                let querySnapshot = await getDocs(q);
+                this.communityFlairs = querySnapshot.docs[0].data().flairs;
+                this.selectedFlair = {};
+            }
+        },
         methods: {
             async handlePost() {
 				await addDoc(collection(db, "userPosts"), {
 					titleHTML: this.title,
+                    titlePlainText: this.$refs.titleEditor.getText(),
                     contentHTML: this.content,
+                    contentPlainText: this.$refs.contentEditor.getText(),
                     postDate: new Date(),
                     authorUsername: this.loggedInUsername,
                     lastEdited: '',
                     likes: [],
                     dislikes: [],
                     community: this.selectedCommunity,
+                    flair: this.selectedFlair,
+                    isPinned: false,
 				});
 
                 alert('Your post has been successfully posted');
@@ -69,8 +89,6 @@
                     name: doc.data().name,
                 });
             });
-
-            // need to get limited amount and dynamically search instead of dropdown with all communities later
         }
 	}
 </script>

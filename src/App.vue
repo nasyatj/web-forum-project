@@ -39,6 +39,8 @@
 		v-bind:loggedInUsername="loggedInUsername"
 		@updateLogInStatus="updateLogInStatus"
 		@updateUsername="updateUsername"
+
+		@updateCommunitiesSelector="updateCommunitiesSelector"
 	/>
 </template>
 
@@ -78,6 +80,10 @@
 			navigateToCommunity(communityName) {
 				this.$router.push({ name: 'communities', params: { communityName: communityName, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }});
 				this.$refs.communitySelector.value='';
+			},
+			updateCommunitiesSelector() {
+				console.log('update communities selector');
+				this.fetchUsersCommunities();
 			},
 			async fetchUsersCommunities() {
 				if (this.isUserLoggedIn == true) {
@@ -129,7 +135,7 @@
 
     nav a, nav span, nav button {
         margin: 10px;
-        color: #FFFFFF; /* White Text */
+        color: black;
     }
 
     nav a {

@@ -32,6 +32,7 @@
                         <div class="post-metadata">
                             <span class="post-author">{{ post.authorUsername }}</span> |
                             <span class="post-date">{{ post.postDate }}</span>
+                            <span class="post-flair" :style="{ backgroundColor: post.flair.color }">{{ post.flair.text }}</span>
                             <span class="post-last-edited-date" v-if="post.lastEdited != ''" >Last edited: {{ post.lastEdited }}</span>
                             <router-link class="post-community" :to="{ name: 'communities', params: { communityName: post.community, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">{{ post.community }}</router-link>
                         </div>
@@ -41,6 +42,11 @@
 
                     <button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">Like</button>
                     <span class="likes-count">{{ post.likes.length }} likes</span>
+
+                    <div class="pin-post">
+                        <button @click="pinPost(post.id, post.isPinned)" v-show="isUserLoggedIn && isCurrentUserCommunityCreator">{{ post.isPinned ? 'Unpin' : 'Pin' }}</button>
+                        <span v-show="post.isPinned">Pinned Icon Placeholder</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,7 +86,7 @@
                 isCurrentUserPartOfCommunity: false,
                 isCurrentUserCommunityCreator: false,
 
-                // changes to true once all asynchronous request are finished in mounted() function
+                // changes to true once all asynchronous request are finished in fetchPostsAndCommunityInfo function
                 doneLoading: false,
             }
         },
@@ -98,6 +104,36 @@
             }
         },
         methods: {
+            async pinPost(postID, isCurrentPostPinned) {
+                let pinnedPostIndex = 0;
+                let pinnedPost = {};
+
+                this.posts.forEach((post, index) => {
+					if (post.id == postID) {
+                        post.isPinned = !isCurrentPostPinned;
+                        pinnedPostIndex = index;
+                        return;
+                    }
+				});
+
+                //pinnedPost = this.posts.splice(pinnedPostIndex, 1);
+                //console.log(pinnedPost);
+                //this.posts = this.posts.filter(post => post.id != pinnedPost.id);
+
+                function compare(a, b) {
+                    if (a.isPinned == true && b.isPinned == false)
+                        return -1;
+                    if (a.isPinned == false && b.isPinned == true)
+                        return 1;
+                    return 0;
+                }
+                //this.posts.splice(0, 1, pinnedPost);
+                this.posts.sort(compare);
+
+                await updateDoc(doc(db, 'userPosts', postID), {
+                    isPinned: !isCurrentPostPinned,
+                });
+            },
             async editCommunity() {
                 
             },
@@ -113,12 +149,15 @@
                 let newMembers = querySnapshot.docs[0].data().members;
                 newMembers.push(this.loggedInUsername);
 
-                updateDoc(doc(db, 'communities', docID), {
+                await updateDoc(doc(db, 'communities', docID), {
                     members: newMembers,
                     membersLength: newMembers.length,
                 });
 
                 alert('You have succesfully joined this community');
+
+                // emit event to update parent App view's header's community selector
+                this.$emit('updateCommunitiesSelector');
 
                 this.isCurrentUserPartOfCommunity = true;
             },
@@ -129,10 +168,13 @@
                 let newMembers = querySnapshot.docs[0].data().members;
                 newMembers = newMembers.filter(memberUsername => { return memberUsername != this.loggedInUsername; });
 
-                updateDoc(doc(db, 'communities', docID), {
+                await updateDoc(doc(db, 'communities', docID), {
                     members: newMembers,
                     membersLength: newMembers.length,
                 });
+
+                // emit event to update parent App view's header's community selector
+                this.$emit('updateCommunitiesSelector');
 
                 alert('You have succesfully left this community');
 
@@ -187,7 +229,17 @@
                         likes: doc.data().likes,
                         dislikes: doc.data().dislikes,
                         community: doc.data().community,
+                        flair: doc.data().flair,
                         isLikedByCurrentUser: isLikedByCurrentUser,
+                        isPinned: doc.data().isPinned,
+                    });
+
+                    let pinnedPosts = this.posts.filter(post => post.isPinned == true);
+                    console.log('pinnedPosts', pinnedPosts);
+                    this.posts = this.posts.filter(post => !pinnedPosts.includes(post));
+                    console.log(this.posts);
+                    pinnedPosts.forEach(pinnedPost => {
+                        this.posts.unshift(pinnedPost);
                     });
                 });
 
@@ -256,6 +308,7 @@
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
+        position: relative;
 	}
 
 	.post-metadata {
@@ -297,4 +350,17 @@
 		margin-top: 10px;
 		text-decoration: underline !important;
 	}
+
+    .post-flair {
+		display: inline-block;
+		margin: 5px 10px;
+		padding: 5px 10px;
+		border-radius: 20px;
+	}
+
+    .pin-post {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
 </style>
