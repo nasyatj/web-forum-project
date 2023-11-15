@@ -24,6 +24,7 @@
 						<div class="post-metadata">
 							<span class="post-author">{{ post.authorUsername }}</span> |
 							<span class="post-date">{{ post.postDate }}</span>
+							<span class="post-flair" :style="{ backgroundColor: post.flair.color }">{{ post.flair.text }}</span>
 							<span class="post-last-edited-date" v-if="post.lastEdited != ''" >Last edited: {{ post.lastEdited }}</span>
 							<router-link class="post-community" :to="{ name: 'communities', params: { communityName: post.community, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">{{ post.community }}</router-link>
 						</div>
@@ -31,13 +32,13 @@
 						<p v-html="post.contentHTML" class="post-content"></p>
 					</router-link>
 
-					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">Like</button>
+					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
 					<span class="likes-count">{{ post.likes.length }} likes</span>
 				</div>
 			</div>
 		</div>
 		
-		<Sidebar 
+		<Sidebar
 			:isUserLoggedIn="isUserLoggedIn"
 			:loggedInUsername="loggedInUsername"
 			:isCommunitySidebar="false"
@@ -161,6 +162,7 @@
 					likes: doc.data().likes,
 					dislikes: doc.data().dislikes,
 					community: doc.data().community,
+					flair: doc.data().flair,
 					isLikedByCurrentUser: isLikedByCurrentUser,
 				});
 			});
@@ -235,5 +237,12 @@
 		color: blue !important;
 		margin-top: 10px;
 		text-decoration: underline !important;
+	}
+
+	.post-flair {
+		display: inline-block;
+		margin: 5px 10px;
+		padding: 5px 10px;
+		border-radius: 20px;
 	}
 </style>

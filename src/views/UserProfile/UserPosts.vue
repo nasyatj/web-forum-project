@@ -12,7 +12,9 @@
                 <div class="post-metadata">
 					<span class="post-author">{{ post.authorUsername }}</span> |
 					<span class="post-date">{{ post.postDate }}</span>
-                    <span v-if="post.lastEdited != ''" class="post-last-edited-date">Last edited: {{ post.lastEdited }}</span>
+                    <span class="post-flair" :style="{ backgroundColor: post.flair.color }">{{ post.flair.text }}</span>
+                    <span class="post-last-edited-date" v-if="post.lastEdited != ''" >Last edited: {{ post.lastEdited }}</span>
+                    <router-link class="post-community" :to="{ name: 'communities', params: { communityName: post.community, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">{{ post.community }}</router-link>
 				</div>
 				<h2 v-html="post.titleHTML" class="post-title"></h2>
 				<p v-html="post.contentHTML" class="post-content"></p>
@@ -25,13 +27,6 @@
 </template>
 
 <script>
-    // need cookies to store login state, add time to dates, make post and sidebar components, like/dislike posts, make all posts part of communities
-    // search component, rediio interface (sidebar to the right, search on top), homepage (trending posts if not logged in, most recent posts if logged in on top )
-    // add images to post, user profile pictures
-    
-    // https://framework7.io/vue/introduction
-    // https://vuetifyjs.com/en/components/navigation-drawers/#location
-
     import { QuillEditor } from '@vueup/vue-quill';
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -63,13 +58,28 @@
                 let querySnapshot = await getDocs(q);
 
                 querySnapshot.forEach(doc => {
+                    let isLikedByCurrentUser = false;
+                    if (this.isUserLoggedIn == true) {
+                        doc.data().likes.forEach(likedByUsername => {
+                            if (likedByUsername == this.loggedInUsername) {
+                                isLikedByCurrentUser = true;
+                                return;
+                            }
+                        });
+                    }
+                    
                     this.posts.push({
                         id: doc.id,
                         titleHTML: doc.data().titleHTML,
                         contentHTML: doc.data().contentHTML,
                         postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
                         authorUsername: doc.data().authorUsername,
-                        lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : ''
+                        lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+                        likes: doc.data().likes,
+                        dislikes: doc.data().dislikes,
+                        community: doc.data().community,
+                        flair: doc.data().flair,
+                        isLikedByCurrentUser: isLikedByCurrentUser,
                     });
                 });
             }
@@ -117,4 +127,22 @@
     .post-last-edited-date {
         display: block;
     }
+
+    .likes-count, .dislikes-count {
+		margin-right: 5px;
+	}
+
+    .post-community {
+		display: block;
+		color: blue !important;
+		margin-top: 10px;
+		text-decoration: underline !important;
+	}
+
+	.post-flair {
+		display: inline-block;
+		margin: 5px 10px;
+		padding: 5px 10px;
+		border-radius: 20px;
+	}
 </style>
