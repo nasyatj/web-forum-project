@@ -13,7 +13,6 @@
 
 			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 			<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
-
 			<div v-show="isUserLoggedIn" class="user-communities">
 				<span>Communities:</span>
 				<select ref="communitySelector" @change="navigateToCommunity(communitySelection)" v-model="communitySelection">
@@ -26,6 +25,7 @@
 					</optgroup>
 				</select>
 			</div>
+			<router-link v-if="showAutomodToolsButton" to="/automod-tools">Automod Tools</router-link>
 		</nav>
 	</header>
 
@@ -102,7 +102,19 @@
 					this.joinedCommunities.sort();
 				}
 			}
+			updateShowAutomodTools() {
+                         	this.$forceUpdate();
+  			},
 		},
+		computed: {
+    		showAutomodToolsButton() {
+      		return (
+       		this.isUserLoggedIn &&
+        	this.$route.params.communityName &&
+        	this.createdCommunities.includes(this.$route.params.communityName)
+      		);
+    		},
+  		},
 		async mount() {
 			this.fetchUsersCommunities();
 		}
