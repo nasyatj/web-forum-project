@@ -14,6 +14,7 @@ import EditPost from '../views/EditPost.vue';
 
 import CreateCommunity from '../views/CreateCommunity.vue';
 import Communities from '../views/Communities.vue';
+import AutomodTools from '../views/AutomodTools.vue';
 
 const routes = [
 	{
@@ -80,6 +81,13 @@ const routes = [
 		name: 'communities',
 		component: Communities,
 		props: true,
+		children: [
+			{
+				path: 'automod-tools',
+				name: 'automod-tools',
+				component: AutomodTools
+			},
+		]
 	},
 ];
 
