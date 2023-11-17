@@ -69,7 +69,9 @@
 
 	header {
 		display: flex;
-		border-bottom: 1px solid #42b983;
+		border-bottom: 1px solid #FF7F50; /* Coral Border */
+        background-color: #008080; /* Teal Background */
+        color: #FFFFFF; /* White Text */
 	}
 
 	nav {
@@ -79,16 +81,28 @@
 
 	nav a, nav span, nav button {
 		margin: 10px;
+		color: black;
 	}
 
 	nav a {
 		font-weight: bold;
-		color: #2c3e50;
+		
 	}
 
 	nav a.router-link-exact-active {
-		color: #42b983;
+		color: #FF7F50; /* Coral for Active Link */
 	}
+	nav button {
+        background-color: #FF7F50; /* Coral Background for Button */
+        color: #FFFFFF; /* White Text */
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    nav button:hover {
+        background-color: #E6735A; /* Darker Coral on Hover */
+    }
 
 	/* quill editor toolbar */
 	.ql-toolbar.ql-snow {
