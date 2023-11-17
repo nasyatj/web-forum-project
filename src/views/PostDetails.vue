@@ -112,6 +112,7 @@
                     author: this.loggedInUsername,
                     commentHTML: this.commentHTML,
                     date: new Date().toJSON().slice(0, 10),
+                    postID: this.postID
                 });
                 this.fetchComments();
                 alert('You have succesfully commented on this post');

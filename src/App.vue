@@ -101,7 +101,7 @@
 					this.createdCommunities.sort();
 					this.joinedCommunities.sort();
 				}
-			}
+			},
 			updateShowAutomodTools() {
                          	this.$forceUpdate();
   			},
