@@ -6,11 +6,13 @@ import SignIn from '../views/SignIn.vue';
 import UserProfile from '../views/UserProfile/UserProfile.vue';
 import BasicInfo from '../views/UserProfile/BasicInfo.vue';
 import ChangePassword from '../views/UserProfile/ChangePassword.vue';
-import UserPosts from '../views/UserProfile/UserPosts.vue';``
+import UserPosts from '../views/UserProfile/UserPosts.vue';''
+import UserComments from '../views/UserProfile/UserComments.vue';
 
 import CreatePost from '../views/CreatePost.vue';
 import PostDetails from '../views/PostDetails.vue';
 import EditPost from '../views/EditPost.vue';
+import EditComment from '../views/EditComment.vue';
 
 import CreateCommunity from '../views/CreateCommunity.vue';
 import Communities from '../views/Communities.vue';
@@ -52,6 +54,11 @@ const routes = [
 				name: 'user-posts',
 				component: UserPosts
 			},
+{
+				path: 'user-comments',
+				name: 'user-comments',
+				component: UserComments
+			},
 		]
 	},
 	{
@@ -69,6 +76,12 @@ const routes = [
 		path: '/edit-post/:postID',
 		name: 'edit-post',
 		component: EditPost,
+		props: true,
+	},
+{
+		path: '/edit-comment/:postID/:commentID',
+		name: 'edit-comment',
+		component: EditComment,
 		props: true,
 	},
 	{
