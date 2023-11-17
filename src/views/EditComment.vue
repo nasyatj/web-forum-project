@@ -42,7 +42,7 @@
 
                 await updateDoc(doc(db, 'userPosts', this.postID, 'comments', this.commentID), {
                     commentHTML: this.content,
-                    date: new Date()
+                    date: new Date().toJSON().slice(0, 10),
                 });
 
                 alert('Your comment has been successfully updated');
