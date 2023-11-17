@@ -92,17 +92,17 @@
 					// Initialize isLikedByCurrentUser inside the forEach loop
 					isLikedByCurrentUser = doc.data().likes.includes(this.loggedInUsername);
 					}
-
 					this.posts.push({
 					id: doc.id,
 					titleHTML: doc.data().titleHTML,
 					contentHTML: doc.data().contentHTML,
 					postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
 					authorUsername: doc.data().authorUsername,
-					lastEdited: doc.data().lastEdited !== '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+					lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
 					likes: doc.data().likes,
 					dislikes: doc.data().dislikes,
 					community: doc.data().community,
+					flair: doc.data().flair,
 					isLikedByCurrentUser: isLikedByCurrentUser,
 					});
 				});
