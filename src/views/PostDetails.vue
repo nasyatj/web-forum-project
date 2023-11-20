@@ -180,10 +180,14 @@
 
 
     .post {
-		border: 1px solid black;
-		text-align: left;
-		max-width: 600px;
-		margin: 10px auto;
+		 border: 3px solid #FF7F50; /* Bold Coral Border */
+    background-color: #FF7F50; /* Coral Background */
+    color: white; /* White Text for better readability */
+    text-align: left;
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px; /* Optional: Rounded corners */
 	}
 
 	.post-metadata {
