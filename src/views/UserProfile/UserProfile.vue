@@ -5,6 +5,7 @@
         <router-link to="/user-profile/basic-info">Basic Info</router-link>
 		<router-link to="/user-profile/change-password">Password</router-link>
 		<router-link to="/user-profile/user-posts">Posts</router-link>
+        <router-link to="/user-profile/user-comments">Comments</router-link>
     </nav>
 
     <router-view 

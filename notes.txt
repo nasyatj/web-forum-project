@@ -4,7 +4,7 @@ homepage (signed out -> most recent posts, signed in -> communities joined posts
 edit and delete comments
 
 need cookies or vuex to store login state
-search component inside communities
+search component inside communities (search posts and communities)
 add images to post, user profile pictures
 pin posts to the top
 post flairs
@@ -14,6 +14,8 @@ edit community
 replace alerts with dialog notifications
 edit username problem (use seperate displaname)
 make sort work
+
+add plaintext to db for userposts and selected flair
     
 https://framework7.io/vue/introduction
 https://vuetifyjs.com/en/components/navigation-drawers/#location

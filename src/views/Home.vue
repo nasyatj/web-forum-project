@@ -24,6 +24,7 @@
 						<div class="post-metadata">
 							<span class="post-author">{{ post.authorUsername }}</span> |
 							<span class="post-date">{{ post.postDate }}</span>
+							<span class="post-flair" :style="{ backgroundColor: post.flair.color }">{{ post.flair.text }}</span>
 							<span class="post-last-edited-date" v-if="post.lastEdited != ''" >Last edited: {{ post.lastEdited }}</span>
 							<router-link class="post-community" :to="{ name: 'communities', params: { communityName: post.community, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">{{ post.community }}</router-link>
 						</div>
@@ -31,13 +32,13 @@
 						<p v-html="post.contentHTML" class="post-content"></p>
 					</router-link>
 
-					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">Like</button>
+					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
 					<span class="likes-count">{{ post.likes.length }} likes</span>
 				</div>
 			</div>
 		</div>
 		
-		<Sidebar 
+		<Sidebar
 			:isUserLoggedIn="isUserLoggedIn"
 			:loggedInUsername="loggedInUsername"
 			:isCommunitySidebar="false"
@@ -91,17 +92,17 @@
 					// Initialize isLikedByCurrentUser inside the forEach loop
 					isLikedByCurrentUser = doc.data().likes.includes(this.loggedInUsername);
 					}
-
 					this.posts.push({
 					id: doc.id,
 					titleHTML: doc.data().titleHTML,
 					contentHTML: doc.data().contentHTML,
 					postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
 					authorUsername: doc.data().authorUsername,
-					lastEdited: doc.data().lastEdited !== '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+					lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
 					likes: doc.data().likes,
 					dislikes: doc.data().dislikes,
 					community: doc.data().community,
+					flair: doc.data().flair,
 					isLikedByCurrentUser: isLikedByCurrentUser,
 					});
 				});
@@ -161,6 +162,7 @@
 					likes: doc.data().likes,
 					dislikes: doc.data().dislikes,
 					community: doc.data().community,
+					flair: doc.data().flair,
 					isLikedByCurrentUser: isLikedByCurrentUser,
 				});
 			});
@@ -247,4 +249,10 @@
 		margin-top: 10px;
 		text-decoration: underline !important;
 	}
-</style>
+
+	.post-flair {
+		display: inline-block;
+		margin: 5px 10px;
+		padding: 5px 10px;
+		border-radius: 20px;
+	}

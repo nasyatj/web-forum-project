@@ -13,7 +13,6 @@
 
 			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 			<router-link to="/create-community" v-show="isUserLoggedIn">Create Community</router-link>
-
 			<div v-show="isUserLoggedIn" class="user-communities">
 				<span>Communities:</span>
 				<select ref="communitySelector" @change="navigateToCommunity(communitySelection)" v-model="communitySelection">
@@ -26,6 +25,7 @@
 					</optgroup>
 				</select>
 			</div>
+			<router-link v-if="showAutomodToolsButton" to="/automod-tools">Automod Tools</router-link>
 		</nav>
 	</header>
 
@@ -39,6 +39,8 @@
 		v-bind:loggedInUsername="loggedInUsername"
 		@updateLogInStatus="updateLogInStatus"
 		@updateUsername="updateUsername"
+
+		@updateCommunitiesSelector="updateCommunitiesSelector"
 	/>
 </template>
 
@@ -79,6 +81,10 @@
 				this.$router.push({ name: 'communities', params: { communityName: communityName, isUserLoggedIn: this.isUserLoggedIn, loggedInUsername: this.loggedInUsername }});
 				this.$refs.communitySelector.value='';
 			},
+			updateCommunitiesSelector() {
+				console.log('update communities selector');
+				this.fetchUsersCommunities();
+			},
 			async fetchUsersCommunities() {
 				if (this.isUserLoggedIn == true) {
 					this.createdCommunities = [];
@@ -95,8 +101,20 @@
 					this.createdCommunities.sort();
 					this.joinedCommunities.sort();
 				}
-			}
+			},
+			updateShowAutomodTools() {
+                         	this.$forceUpdate();
+  			},
 		},
+		computed: {
+    		showAutomodToolsButton() {
+      		return (
+       		this.isUserLoggedIn &&
+        	this.$route.params.communityName &&
+        	this.createdCommunities.includes(this.$route.params.communityName)
+      		);
+    		},
+  		},
 		async mount() {
 			this.fetchUsersCommunities();
 		}
@@ -129,7 +147,7 @@
 
     nav a, nav span, nav button {
         margin: 10px;
-        color: #FFFFFF; /* White Text */
+        color: black;
     }
 
     nav a {
