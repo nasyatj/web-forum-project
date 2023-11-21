@@ -211,6 +211,7 @@
 		text-align: left;
 		background-color: #FF7F50; /* Coral Background */
 		max-width: 600px;
+		border-radius: 5px; /* Optional: Rounded corners */
 		margin: 10px auto;
 		color: #FFFFFF; /* White text color */
 	}
