@@ -6,8 +6,10 @@ import SignIn from '../views/SignIn.vue';
 import UserProfile from '../views/UserProfile/UserProfile.vue';
 import BasicInfo from '../views/UserProfile/BasicInfo.vue';
 import ChangePassword from '../views/UserProfile/ChangePassword.vue';
-import UserPosts from '../views/UserProfile/UserPosts.vue';''
+
+import UserPosts from '../views/UserProfile/UserPosts.vue';
 import UserComments from '../views/UserProfile/UserComments.vue';
+import UserBookmarks from '../views/UserProfile/UserBookmarks.vue';
 
 import CreatePost from '../views/CreatePost.vue';
 import PostDetails from '../views/PostDetails.vue';
@@ -54,11 +56,17 @@ const routes = [
 				name: 'user-posts',
 				component: UserPosts
 			},
-{
+			{
 				path: 'user-comments',
 				name: 'user-comments',
 				component: UserComments
 			},
+
+			{
+				path: 'user-bookmarks',
+				name: 'user-bookmarks',
+				component: UserBookmarks
+			}
 		]
 	},
 	{

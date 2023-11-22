@@ -58,7 +58,8 @@
 				await addDoc(collection(db, "users"), {
 					email: this.email,
 					password: this.password,
-					username: this.username
+					username: this.username,
+					bookmarks: [],
 				});
 
 				alert('Your account has been created!');

@@ -60,12 +60,14 @@
         },
         methods: {
             async handlePost() {
-				await addDoc(collection(db, "userPosts"), {
+                let currentDate = new Date();
+
+				let addedPost = await addDoc(collection(db, "userPosts"), {
 					titleHTML: this.title,
                     titlePlainText: this.$refs.titleEditor.getText(),
                     contentHTML: this.content,
                     contentPlainText: this.$refs.contentEditor.getText(),
-                    postDate: new Date(),
+                    postDate: currentDate,
                     authorUsername: this.loggedInUsername,
                     lastEdited: '',
                     likes: [],
@@ -75,9 +77,20 @@
                     isPinned: false,
 				});
 
+                // emit notification
+                this.$emit('notification', 'create-post', {
+                    id: addedPost.id,
+                    titlePlainText: this.$refs.titleEditor.getText(),
+                    contentPlainText: this.$refs.contentEditor.getText(),
+                    postDate: currentDate,
+                    community: this.selectedCommunity,
+                });
+
                 alert('Your post has been successfully posted');
                 this.title = '';
                 this.content = '';
+
+                this.$router.push({ name: 'home'});
             }
         },
         async mounted() {

@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar">
-        <div class="sidebar-content">
+        <div class="sidebar-content" :class="{ sticky: !isCommunitySidebar}">
             <div class="sidebar-community-info">
                 <h3>{{ isCommunitySidebar == true ? communityName : 'Home' }}</h3>
                 <p>{{ isCommunitySidebar == true ? communityDescription : 'Your personal page showing latest posts from communities you have joined and the latest trending posts' }}</p>
@@ -18,7 +18,17 @@
             </div>
 
             <div class="community-info" v-show="isCommunitySidebar">
-                
+                <h3>Community Info</h3>
+                <div class="guidelines-container">
+                    <div class="guideline" v-for="guideline in communityGuidelines">
+                        <h4>{{ guideline.heading }}</h4>
+                        <p>{{ guideline.description }}</p>
+                    </div>
+                </div>
+                <h4>Flairs: </h4>
+                <div class="flairs-container">
+                    <span class="flair" v-for="flair in communityFlairs" :style="{ backgroundColor: flair.color }">{{ flair.text }}</span>
+                </div>
             </div>
 
             <div class="sidebar-popular-communities">
@@ -51,6 +61,7 @@
             'communityName',
             'communityDescription',
             'communityGuidelines',
+            'communityFlairs',
             'communityModerators',
             'numOfMembers'
         ],
@@ -78,10 +89,13 @@
 		padding: 10px;
 		margin: 10px;
 		max-width: 100%;
-		position: sticky;
-		top: 20%;
 		border: 1px solid black;
 	}
+
+    .sticky {
+        position: sticky;
+		top: 20%;
+    }
 
 	.sidebar-links a {
 		display: block;
@@ -97,4 +111,15 @@
 	.sidebar-popular-communities h4 {
 		margin-bottom: -10px;
 	}
+
+    .flairs-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .flair {
+        margin: 5px 10px;
+		padding: 5px 10px;
+		border-radius: 20px;
+    }
 </style>

@@ -12,10 +12,9 @@
 
 			<div class="sort-by-container">
 				<span>Sort by: </span>
-				<select class="sort-by">
+				<select class="sort-by" v-model="sortBySelect">
+					<option value="new" selected>New</option>
 					<option value="top">Top</option>
-					<option value="new">New</option>
-					<option value="hot">Hot</option>
 				</select>
 			</div>
 
@@ -40,8 +39,10 @@
                         <p v-html="post.contentHTML" class="post-content"></p>
                     </router-link>
 
-                    <button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">Like</button>
-                    <span class="likes-count">{{ post.likes.length }} likes</span>
+                    <button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
+					<span class="likes-count">{{ post.likes.length }} likes</span>
+
+                    <button class="bookmark-button" @click="bookmark(post.id, post.isBookmarkedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isBookmarkedByCurrentUser ? 'Unbookmark' : 'Bookmark' }}</button>
 
                     <div class="pin-post">
                         <button @click="pinPost(post.id, post.isPinned)" v-show="isUserLoggedIn && isCurrentUserCommunityCreator">{{ post.isPinned ? 'Unpin' : 'Pin' }}</button>
@@ -58,10 +59,14 @@
             :communityName="communityName"
             :communityDescription="communityDescription"
             :communityGuidelines="guidelines"
+            :communityFlairs="flairs"
             :communityModerators="moderators"
             :numOfMembers="numOfMembers"
         />
     </div>
+
+    <!-- Spinner -->
+	<div class="lds-dual-ring" v-show="!doneLoading">Loading...</div>
 </template>
 
 <script>
@@ -82,12 +87,15 @@
                 creator: '',
                 numOfMembers: 0,
                 members: [],
+                flairs: [],
 
                 isCurrentUserPartOfCommunity: false,
                 isCurrentUserCommunityCreator: false,
 
                 // changes to true once all asynchronous request are finished in fetchPostsAndCommunityInfo function
                 doneLoading: false,
+
+                sortBySelect: 'new',
             }
         },
         props: [
@@ -101,33 +109,74 @@
         watch: {
             async communityName(newName, oldName) {
                 await this.fetchPostsAndCommunityInfo(newName);
-            }
+            },
+            sortBySelect(newVal, oldVal) {
+                console.log(newVal);
+				if (newVal == 'new') {
+					function compare(a, b) {
+						if (a.postDateTimestamp.seconds > b.postDateTimestamp.seconds)
+							return -1;
+						else if (a.postDateTimestamp.seconds < b.postDateTimestamp.seconds)
+							return 1;
+						else
+							return 0;
+					}
+					this.posts.sort(compare);
+				}
+				else if (newVal == 'top') {
+					function compare(a, b) {
+						if (a.likes.length > b.likes.length)
+							return -1;
+						else if (a.likes.length < b.likes.length)
+							return 1;
+						else
+							return 0;
+					}
+					this.posts.sort(compare);
+				}
+			}
         },
         methods: {
-            async pinPost(postID, isCurrentPostPinned) {
-                let pinnedPostIndex = 0;
-                let pinnedPost = {};
+            async bookmark(postID, isBookmarkedByCurrentUser) {
+				this.posts.forEach(post => {
+					if (post.id == postID)
+						post.isBookmarkedByCurrentUser = !isBookmarkedByCurrentUser;
+				});
 
+				let q = query(collection(db, 'users'), where('username', '==', this.loggedInUsername));
+				let querySnapshot = await getDocs(q);
+				let userID = querySnapshot.docs[0].id;
+				let updatedBookmarks = querySnapshot.docs[0].data().bookmarks;
+
+				// un-bookmark
+				if (isBookmarkedByCurrentUser == true)
+					updatedBookmarks = updatedBookmarks.filter(bookmarkPostID => bookmarkPostID != postID);
+				// bookmark
+				else
+					updatedBookmarks.push(postID);
+
+				await updateDoc(doc(db, 'users', userID), {
+					bookmarks: updatedBookmarks,
+				});
+			},
+            async pinPost(postID, isCurrentPostPinned) {
                 this.posts.forEach((post, index) => {
 					if (post.id == postID) {
                         post.isPinned = !isCurrentPostPinned;
-                        pinnedPostIndex = index;
                         return;
                     }
 				});
-
-                //pinnedPost = this.posts.splice(pinnedPostIndex, 1);
-                //console.log(pinnedPost);
-                //this.posts = this.posts.filter(post => post.id != pinnedPost.id);
-
+                
                 function compare(a, b) {
                     if (a.isPinned == true && b.isPinned == false)
                         return -1;
-                    if (a.isPinned == false && b.isPinned == true)
+                    else if (a.isPinned == false && b.isPinned == true)
                         return 1;
-                    return 0;
+                    else if (a.isPinned == b.isPinned) {
+                        // compare date
+                        return 0;
+                    }
                 }
-                //this.posts.splice(0, 1, pinnedPost);
                 this.posts.sort(compare);
 
                 await updateDoc(doc(db, 'userPosts', postID), {
@@ -209,7 +258,8 @@
                 let q = query(collection(db, 'userPosts'), where('community', '==', communityName), orderBy('postDate', 'desc'));
                 let querySnapshot = await getDocs(q);
 
-                querySnapshot.forEach(doc => {
+                for (const doc of querySnapshot.docs) {
+                    // find out if post liked by current logged in user
                     let isLikedByCurrentUser = false;
                     if (this.isUserLoggedIn == true) {
                         doc.data().likes.forEach(likedByUsername => {
@@ -219,6 +269,15 @@
                             }
                         });
                     }
+
+                    // find out if post bookmarked by current logged in user
+                    let isBookmarkedByCurrentUser = false;
+                    if (this.isUserLoggedIn == true) {
+                        let temp = await getDocs(query(collection(db, 'users'), where('username', '==', this.loggedInUsername), where('bookmarks', 'array-contains', doc.id)));
+                        if (temp.docs.length > 0)
+                            isBookmarkedByCurrentUser = true;
+                    }
+
                     this.posts.push({
                         id: doc.id,
                         titleHTML: doc.data().titleHTML,
@@ -232,16 +291,16 @@
                         flair: doc.data().flair,
                         isLikedByCurrentUser: isLikedByCurrentUser,
                         isPinned: doc.data().isPinned,
+                        isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
+                        postDateTimestamp: doc.data().postDate,
                     });
 
                     let pinnedPosts = this.posts.filter(post => post.isPinned == true);
-                    console.log('pinnedPosts', pinnedPosts);
                     this.posts = this.posts.filter(post => !pinnedPosts.includes(post));
-                    console.log(this.posts);
                     pinnedPosts.forEach(pinnedPost => {
                         this.posts.unshift(pinnedPost);
                     });
-                });
+                }
 
                 // get community information
                 q = query(collection(db, 'communities'), where('name', '==', communityName));
@@ -253,6 +312,7 @@
                 this.creator = querySnapshot.docs[0].data().creator;
                 this.numOfMembers = querySnapshot.docs[0].data().membersLength;
                 this.members = querySnapshot.docs[0].data().members;
+                this.flairs = querySnapshot.docs[0].data().flairs;
                 if (this.isUserLoggedIn == true) {
                     this.isCurrentUserCommunityCreator = querySnapshot.docs[0].data().creator == this.loggedInUsername;
                     this.members.forEach(memberUsername => {
