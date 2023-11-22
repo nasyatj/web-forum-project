@@ -31,14 +31,10 @@
             <button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
 			<span class="likes-count">{{ post.likes.length }} likes</span>
 
-            <button @click="editPost(post.id)">Edit Post</button>
-            <button @click="deletePost(post.id)">Delete Post</button>
-
             <button class="bookmark-button" @click="bookmark(post.id, post.isBookmarkedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isBookmarkedByCurrentUser ? 'Unbookmark' : 'Bookmark' }}</button>
         </div>
-        
-        <h4 v-show="posts.length == 0 && filterBookmarksChecked == false">No posts created yet</h4>
-        <h4 v-show="posts.length == 0 && filterBookmarksChecked == true">No bookmarks created yet</h4>
+
+        <h4 v-show="posts.length == 0">No bookmarks created yet</h4>
     </div>
 
     <!-- Spinner -->
@@ -56,7 +52,6 @@
         data() {
             return {
                 posts: [],
-                filterBookmarksChecked: false,
                 doneLoading: false,
                 sortBySelect: 'new',
             }
@@ -102,6 +97,27 @@
                     alert('The selected post has been deleted');
                 };
             },
+            async like(postID, isLikedByCurrentUser) {
+				let updatedLikes = [];
+
+				this.posts.forEach((post, index) => {
+					if (post.id == postID) {
+						// unlike
+						if (isLikedByCurrentUser == true)
+							post.likes = post.likes.filter(username => { return username != this.loggedInUsername; });
+						// like
+						else 
+							post.likes.push(this.loggedInUsername);
+
+						updatedLikes = post.likes;
+						post.isLikedByCurrentUser = !isLikedByCurrentUser;
+					}
+				});
+
+				await updateDoc(doc(db, 'userPosts', postID), {
+					likes: updatedLikes
+				});
+			},
             async bookmark(postID, isBookmarkedByCurrentUser) {
 				this.posts.forEach(post => {
 					if (post.id == postID)
@@ -124,33 +140,12 @@
 					bookmarks: updatedBookmarks,
 				});
 			},
-            async like(postID, isLikedByCurrentUser) {
-				let updatedLikes = [];
-
-				this.posts.forEach((post, index) => {
-					if (post.id == postID) {
-						// unlike
-						if (isLikedByCurrentUser == true)
-							post.likes = post.likes.filter(username => { return username != this.loggedInUsername; });
-						// like
-						else 
-							post.likes.push(this.loggedInUsername);
-
-						updatedLikes = post.likes;
-						post.isLikedByCurrentUser = !isLikedByCurrentUser;
-					}
-				});
-
-				await updateDoc(doc(db, 'userPosts', postID), {
-					likes: updatedLikes
-				});
-			},
             async fetchUserPosts() {
                 this.doneLoading = true;
 
                 this.posts = [];
 
-                let q = query(collection(db, 'userPosts'), where('authorUsername', '==', this.loggedInUsername), orderBy('postDate', 'desc'));
+                let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
                 let querySnapshot = await getDocs(q);
 
                 for (const doc of querySnapshot.docs) {
@@ -173,21 +168,23 @@
                             isBookmarkedByCurrentUser = true;
                     }
                     
-                    this.posts.push({
-                        id: doc.id,
-                        titleHTML: doc.data().titleHTML,
-                        contentHTML: doc.data().contentHTML,
-                        postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
-                        authorUsername: doc.data().authorUsername,
-                        lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
-                        likes: doc.data().likes,
-                        dislikes: doc.data().dislikes,
-                        community: doc.data().community,
-                        flair: doc.data().flair,
-                        isLikedByCurrentUser: isLikedByCurrentUser,
-                        isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
-                        postDateTimestamp: doc.data().postDate,
-                    });
+                    if (isBookmarkedByCurrentUser == true) {
+                        this.posts.push({
+                            id: doc.id,
+                            titleHTML: doc.data().titleHTML,
+                            contentHTML: doc.data().contentHTML,
+                            postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+                            authorUsername: doc.data().authorUsername,
+                            lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+                            likes: doc.data().likes,
+                            dislikes: doc.data().dislikes,
+                            community: doc.data().community,
+                            flair: doc.data().flair,
+                            isLikedByCurrentUser: isLikedByCurrentUser,
+                            isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
+                            postDateTimestamp: doc.data().postDate,
+                        });
+                    }
                 }
 
                 this.doneLoading = true;

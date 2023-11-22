@@ -24,8 +24,6 @@
             </div>
         </div>
 
-        <!-- Users to add as moderators (default is user themself) -->
-
         <!-- Flairs -->
         <div class="flairs-input-container">
             <h3>Flairs</h3>
@@ -39,6 +37,22 @@
             <div v-for="flair in flairs">
                 <span class="flair" :style="{ backgroundColor: flair.color }">{{ flair.text }}</span>
                 <button @click="removeFlair(flair.text, flair.color)">Remove</button>
+            </div>
+        </div>
+
+        <!-- Moderators -->
+        <div class="moderators-input-container">
+            <h3>Moderators</h3>
+            <input type="text" placeholder="Add a moderator username (you by default are a moderator)" v-model="moderatorTextInput" />
+            <button @click="addModerator">Add Moderator</button>
+        </div>
+
+        <div class="moderators-container">
+            <div v-for="moderator in moderators">
+                <div class="moderator-username">
+                    {{ moderator }} <span v-show="moderator == loggedInUsername">(default)</span>    
+                    <button v-show="moderator != loggedInUsername" @click="removeModerator(moderator)">Remove</button>
+                </div>
             </div>
         </div>
 
@@ -68,6 +82,9 @@
                 guidelineHeading: '',
                 guidelineDescription: '',
                 guidelines: [],
+
+                moderatorTextInput: '',
+                moderators: [this.loggedInUsername],
 			}
 		},
         components: {
@@ -78,6 +95,28 @@
 			'loggedInUsername'
 		],
         methods: {
+            async addModerator() {
+                if (this.moderatorTextInput == this.loggedInUsername) {
+                    alert('You are by default are already in the moderators group');
+                    return;
+                }
+                if (this.moderators.includes(this.moderatorTextInput)) {
+                    alert('That moderator has already been added');
+                    return;
+                }
+                let q = query(collection(db, 'users'), where('username', '==', this.moderatorTextInput));
+                let querySnapshot = await getDocs(q);
+                if (querySnapshot.size == 0) {
+                    alert('No user exists with that username');
+                    return;
+                }
+
+                this.moderators.push(this.moderatorTextInput);
+                this.moderatorTextInput = '';
+            },
+            removeModerator(moderatorUsername) {
+                this.moderators = this.moderators.filter(username => username != moderatorUsername);
+            },
             addFlair() {
                 if (this.flairTextInput < 3) {
                     alert('Please enter a flair text greater than 3 characters');
@@ -129,6 +168,10 @@
                 this.guidelines = this.guidelines.filter(guideline => guideline.heading != heading);
             },
             async createCommunity() {
+                if (this.name || this.description) {
+                    alert('Community name and description can not be blank');
+                    return;
+                }
                 // check community doesn't already exist
                 let q = query(collection(db, 'communities'), where('name', '==', this.name));
                 let querySnapshot = await getDocs(q);
@@ -142,7 +185,7 @@
 				await addDoc(collection(db, 'communities'), {
 					name: this.name,
                     description: this.description,
-                    moderators: [this.loggedInUsername],
+                    moderators: this.moderators,
                     guidelines: this.guidelines,
                     flairs: this.flairs,
                     creator: this.loggedInUsername,
@@ -186,7 +229,13 @@
 		padding: 10px 30px;
 	}
 
-    .flairs-input-container button, .flairs-container button, .guidelines-input-container button, .guidelines-container button {
+    .flairs-input-container button, 
+    .flairs-container button, 
+    .guidelines-input-container button, 
+    .guidelines-container button, 
+    .moderators-input-container button,
+    .moderators-container button,
+    .moderators-container button {
         padding: 5px;
         width: default;
     }
@@ -202,5 +251,9 @@
         color: black;
         padding: 10px;
         border-radius: 20px;
+    }
+
+    .moderator-username {
+        margin: 10px 0px;
     }
 </style>

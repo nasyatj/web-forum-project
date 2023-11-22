@@ -1,21 +1,15 @@
-make post component
-dislike posts
 homepage (signed out -> most recent posts, signed in -> communities joined posts, then other posts)
-edit and delete comments
 
-need cookies or vuex to store login state
 search component inside communities (search posts and communities)
-add images to post, user profile pictures
-pin posts to the top
-post flairs
-community info (guidelines, etc)
-add doneLoading to places that need it
-edit community
 replace alerts with dialog notifications
-edit username problem (use seperate displaname)
-make sort work
+edit username problem (use seperate displaname), (show last in demo)
 
-add plaintext to db for userposts and selected flair
+
+replace likes and bookmarks with icons
+edit community
+
+create account for demo that is owner of community to show everything
+add description to user stories on trello (as a user i want because, defiintion of done, etc)
     
 https://framework7.io/vue/introduction
 https://vuetifyjs.com/en/components/navigation-drawers/#location

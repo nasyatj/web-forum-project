@@ -1,5 +1,5 @@
 <template>
-	<div class="grid-container">
+	<div class="grid-container" v-show="doneLoading">
 		<div class="main-content">
 			<form @submit.prevent="handleSearch">
 				<input v-model="searchTerm" type="text" id="search-bar" placeholder="Search for posts, users, and communities..." />
@@ -11,15 +11,14 @@
 
 			<div class="sort-by-container">
 				<span>Sort by: </span>
-				<select class="sort-by">
+				<select class="sort-by" v-model="sortBySelect">
+					<option value="new" selected>New</option>
 					<option value="top">Top</option>
-					<option value="new">New</option>
-					<option value="hot">Hot</option>
 				</select>
 			</div>
 
 			<div id="posts-container">
-				<div v-for="post in posts" :key="post.id" class="post" ref="posts">
+				<div v-for="post in posts" :key="post.id" class="post">
 					<router-link class='post-link' :to="{ name: 'post-details', params: { postID: post.id, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}">
 						<div class="post-metadata">
 							<span class="post-author">{{ post.authorUsername }}</span> |
@@ -34,6 +33,8 @@
 
 					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
 					<span class="likes-count">{{ post.likes.length }} likes</span>
+
+					<button class="bookmark-button" @click="bookmark(post.id, post.isBookmarkedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isBookmarkedByCurrentUser ? 'Unbookmark' : 'Bookmark' }}</button>
 				</div>
 			</div>
 		</div>
@@ -48,11 +49,14 @@
 		<button>Load More</button> 
 		-->
 	</div>
+
+	<!-- Spinner -->
+	<div class="lds-dual-ring" v-show="!doneLoading">Loading...</div>
 </template>
 
 <script>
 	import { db } from '@/firebase';
-	import { collection, query, where, or, getDocs, addDoc, orderBy, startAfter, limit, getDoc, doc,updateDoc } from "firebase/firestore";
+	import { collection, query, where, or, getDocs, addDoc, orderBy, startAfter, limit, getDoc, and, doc, updateDoc } from "firebase/firestore";
 
 	import Sidebar from '@/components/Sidebar.vue';
 
@@ -61,17 +65,88 @@
 			return {
 				posts: [],
 				topCommunities: [],
+				doneLoading: false,
+				sortBySelect: 'new',
 			}
 		},
 		components: {
 			Sidebar
+		},
+		watch: {
+			sortBySelect(newVal, oldVal) {
+				if (newVal == 'new') {
+					function compare(a, b) {
+						if (a.postDateTimestamp.seconds > b.postDateTimestamp.seconds)
+							return -1;
+						else if (a.postDateTimestamp.seconds < b.postDateTimestamp.seconds)
+							return 1;
+						else
+							return 0;
+					}
+					this.posts.sort(compare);
+				}
+				else if (newVal == 'top') {
+					function compare(a, b) {
+						if (a.likes.length > b.likes.length)
+							return -1;
+						else if (a.likes.length < b.likes.length)
+							return 1;
+						else
+							return 0;
+					}
+					this.posts.sort(compare);
+				}
+			}
 		},
 		props: [
 			'isUserLoggedIn',
 			'loggedInUsername'
 		],
 		methods: {
-		async search() {
+			async bookmark(postID, isBookmarkedByCurrentUser) {
+				this.posts.forEach(post => {
+					if (post.id == postID)
+						post.isBookmarkedByCurrentUser = !isBookmarkedByCurrentUser;
+				});
+
+				let q = query(collection(db, 'users'), where('username', '==', this.loggedInUsername));
+				let querySnapshot = await getDocs(q);
+				let userID = querySnapshot.docs[0].id;
+				let updatedBookmarks = querySnapshot.docs[0].data().bookmarks;
+
+				// un-bookmark
+				if (isBookmarkedByCurrentUser == true)
+					updatedBookmarks = updatedBookmarks.filter(bookmarkPostID => bookmarkPostID != postID);
+				// bookmark
+				else
+					updatedBookmarks.push(postID);
+
+				await updateDoc(doc(db, 'users', userID), {
+					bookmarks: updatedBookmarks,
+				});
+			},
+			async like(postID, isLikedByCurrentUser) {
+				let updatedLikes = [];
+
+				this.posts.forEach((post, index) => {
+					if (post.id == postID) {
+						// unlike
+						if (isLikedByCurrentUser == true)
+							post.likes = post.likes.filter(username => { return username != this.loggedInUsername; });
+						// like
+						else 
+							post.likes.push(this.loggedInUsername);
+
+						updatedLikes = post.likes;
+						post.isLikedByCurrentUser = !isLikedByCurrentUser;
+					}
+				});
+
+				await updateDoc(doc(db, 'userPosts', postID), {
+					likes: updatedLikes
+				});
+			},
+			async search() {
 				this.posts = [];
 
 				console.log('In search... = ' + this.searchTerm);
@@ -113,36 +188,17 @@
 					console.error('Search Error: ', error);
 				}
 			},
-
-			async like(postID, isLikedByCurrentUser) {
-				let updatedLikes = [];
-
-				this.posts.forEach((post, index) => {
-					if (post.id == postID) {
-						// unlike
-						if (isLikedByCurrentUser == true)
-							post.likes = post.likes.filter(username => { return username != this.loggedInUsername; });
-						// like
-						else 
-							post.likes.push(this.loggedInUsername);
-
-						updatedLikes = post.likes;
-						post.isLikedByCurrentUser = !isLikedByCurrentUser;
-					}
-				});
-
-				await updateDoc(doc(db, 'userPosts', postID), {
-					likes: updatedLikes
-				});
-			},
 		},
 		async mounted() {
+			this.doneLoading = false;
+
 			// get most recent posts right now, but need to be ordered by likes most reecently (add like/dislike)
 			this.posts = [];
 
 			let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
 			let querySnapshot = await getDocs(q);
-			querySnapshot.forEach(doc => {
+			for (const doc of querySnapshot.docs) {
+				// find out if post liked by current logged in user
 				let isLikedByCurrentUser = false;
 				if (this.isUserLoggedIn == true) {
 					doc.data().likes.forEach(likedByUsername => {
@@ -152,6 +208,15 @@
 						}
 					});
 				}
+
+				// find out if post bookmarked by current logged in user
+				let isBookmarkedByCurrentUser = false;
+				if (this.isUserLoggedIn == true) {
+					let temp = await getDocs(query(collection(db, 'users'), where('username', '==', this.loggedInUsername), where('bookmarks', 'array-contains', doc.id)));
+					if (temp.docs.length > 0)
+						isBookmarkedByCurrentUser = true;
+				}
+
 				this.posts.push({
 					id: doc.id,
 					titleHTML: doc.data().titleHTML,
@@ -164,10 +229,14 @@
 					community: doc.data().community,
 					flair: doc.data().flair,
 					isLikedByCurrentUser: isLikedByCurrentUser,
+					isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
+					postDateTimestamp: doc.data().postDate,
 				});
-			});
+			}
 
 			// pagination to be added later: https://firebase.google.com/docs/firestore/query-data/query-cursors
+
+			this.doneLoading = true;
 		}
 	}
 </script>

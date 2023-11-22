@@ -13,7 +13,7 @@
 
             <form @submit.prevent="handleAddComment" v-show="isUserLoggedIn">
                 <h3>Add a comment:</h3>
-                <QuillEditor v-model:content="commentHTML" content-type="html" required />
+                <QuillEditor v-model:content="commentHTML" content-type="html" required ref="addComment" />
                 <button type="submit">Post</button>
             </form>
 
@@ -56,7 +56,9 @@
             return {
                 // post info
                 titleHTML: '',
+                titlePlainText: '',
                 contentHTML: '',
+                contentPlainText: '',
                 postDate: '',
                 authorUsername: '',
                 commentHTML: '',
@@ -88,7 +90,9 @@
             // get post info
             const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
             this.titleHTML = docSnapshot.data().titleHTML;
+            this.titlePlainText = docSnapshot.data().titlePlainText;
             this.contentHTML = docSnapshot.data().contentHTML;
+            this.contentPlainText = docSnapshot.data().contentPlainText;
             this.postDate = docSnapshot.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
             this.authorUsername = docSnapshot.data().authorUsername;
             this.lastEdited = docSnapshot.data().lastEdited != '' ? docSnapshot.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
@@ -114,6 +118,18 @@
                     date: new Date().toJSON().slice(0, 10),
                     postID: this.postID
                 });
+
+                // emit notification
+                this.$emit('notification', 'create-comment', {
+                    id: this.postID.concat((Math.random() + 1).toString(36).substring(7)),   // add random string to end, as comments do not have unique id, 
+                    parentPostID: this.postID,                                               // and the posts in notification array already use their post id
+                    parentPostTitle: this.titlePlainText,
+                    commentAuthor: this.loggedInUsername,
+                    commentPlainText: this.$refs.addComment.getText(),                      
+                    postDate: new Date().toJSON().slice(0, 10),
+                    community: this.communityName,
+                });
+
                 this.fetchComments();
                 alert('You have succesfully commented on this post');
             },
