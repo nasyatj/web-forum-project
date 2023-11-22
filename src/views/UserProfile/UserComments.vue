@@ -4,13 +4,13 @@
         <!-- Display comments made by the logged-in user -->
     <div class="comments-container">
         <div v-for="comment in comments" :key="comment.key" class="comment">
-                <div class="comment-metadata">
-                    <span class="comment-author">{{ comment.author }}</span> |
-                    <span class="comment-date">{{ comment.date }}</span>
-                </div>
-                <p v-html="comment.commentHTML" class="comment-content"></p>
+            <div class="comment-metadata">
+                <span class="comment-author">{{ comment.author }}</span> |
+                <span class="comment-date">{{ comment.date }}</span>
+            </div>
+            <p v-html="comment.commentHTML" class="comment-content"></p>
             
-            <router-link :to="{name: 'edit-comment', params: {commentID: comment.key, postID: comment.postID, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}"><button>Edit Comment</button>></router-link>
+            <router-link :to="{name: 'edit-comment', params: {commentID: comment.key, postID: comment.postID, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }}"><button>Edit Comment</button></router-link>
             <button @click="deleteComment(comment.postID, comment.key)">Delete Comment</button>
             
 		</div>
