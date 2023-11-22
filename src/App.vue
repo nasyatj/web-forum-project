@@ -170,7 +170,7 @@ import { tSThisType } from '@babel/types';
 				}
 			},
 			updateShowAutomodTools() {
-                         	this.$forceUpdate();
+                this.$forceUpdate();
   			},
 			async showNotifications() {
 				if (this.notificationsShowing == false) {
@@ -231,9 +231,9 @@ import { tSThisType } from '@babel/types';
 		computed: {
     		showAutomodToolsButton() {
 				return (
-				this.isUserLoggedIn &&
-				this.$route.params.communityName &&
-				this.createdCommunities.includes(this.$route.params.communityName)
+					this.isUserLoggedIn &&
+					this.$route.params.communityName &&
+					this.createdCommunities.includes(this.$route.params.communityName)
 				);
     		},
   		},

@@ -2,9 +2,10 @@
     <!-- need to add a search bar to search within community and dropdowns to sort by various post properties like date, likes, etc. -->
     <div class="grid-container" v-show="doneLoading">
 		<div class="main-content">
-			<form class="search-bar" @submit.prevent="handleSearch">
-				<input type="text" placeholder="Search for posts, users, and communities..." />
-				<button type="submit">Search</button>
+            <form @submit.prevent="handleSearch">
+				<input v-model="searchTerm" type="text" id="search-bar" placeholder="Search for posts..." />
+				<button @click="search">Search</button>
+				<button @click="clearSearch">Clear</button>
 			</form>
 
 			<h2 v-show="!isUserLoggedIn">Sign in to create posts and comment</h2>
@@ -96,6 +97,9 @@
                 doneLoading: false,
 
                 sortBySelect: 'new',
+
+                searchTerm: '',
+                isSearchResults: false,
             }
         },
         props: [
@@ -250,6 +254,32 @@
 					likes: updatedLikes
 				});
 			},
+            async search() {
+				if (this.searchTerm.length < 3) {
+					alert('Atleast 3 characters required for search');
+					return;
+				}
+				this.isSearchResults = true;
+
+				await this.fetchPostsAndCommunityInfo(this.communityName);
+				this.doneLoading = false;
+
+				// search posts
+				let postHits = [];
+				for (const post of this.posts) {
+					if (post.titlePlainText.toLowerCase().includes(this.searchTerm.toLowerCase()) || post.contentPlainText.toLowerCase().includes(this.searchTerm.toLowerCase())) {
+						postHits.push(post);
+					}
+				}
+
+				this.posts = postHits;
+
+				this.doneLoading = true;
+			},
+			async clearSearch() {
+				this.isSearchResults = false;
+				await this.fetchPostsAndCommunityInfo(this.communityName);
+			},
             async fetchPostsAndCommunityInfo(communityName) {
                 this.doneLoading = false;
                 this.posts = [];
@@ -281,7 +311,9 @@
                     this.posts.push({
                         id: doc.id,
                         titleHTML: doc.data().titleHTML,
+                        titlePlainText: doc.data().titlePlainText,
                         contentHTML: doc.data().contentHTML,
+                        contentPlainText: doc.data().contentPlainText,
                         postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
                         authorUsername: doc.data().authorUsername,
                         lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',

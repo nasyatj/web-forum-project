@@ -1,10 +1,9 @@
 <template>
-    <!-- need a search and dropdowns for sort by
     <form @submit.prevent="handleSearch">
-		<input type="text" id="search-bar" placeholder="Search for posts, users, and communities..." />
-		<button type="submit">Search</button>
-	</form>
-    -->
+        <input v-model="searchTerm" type="text" id="search-bar" placeholder="Search for posts..." />
+        <button @click="search">Search</button>
+        <button @click="clearSearch">Clear</button>
+    </form>
 
     <div class="sort-by-container">
         <span>Sort by: </span>
@@ -36,9 +35,10 @@
 
             <button class="bookmark-button" @click="bookmark(post.id, post.isBookmarkedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isBookmarkedByCurrentUser ? 'Unbookmark' : 'Bookmark' }}</button>
         </div>
-        
-        <h4 v-show="posts.length == 0 && filterBookmarksChecked == false">No posts created yet</h4>
-        <h4 v-show="posts.length == 0 && filterBookmarksChecked == true">No bookmarks created yet</h4>
+
+        <h4 v-show="posts.length == 0 && isSearchResults == true">No posts found with those terms</h4>
+        <h4 v-show="posts.length == 0 && filterBookmarksChecked == false && isSearchResults == false">No posts created yet</h4>
+        <h4 v-show="posts.length == 0 && filterBookmarksChecked == true  && isSearchResults == false">No bookmarks created yet</h4>
     </div>
 
     <!-- Spinner -->
@@ -59,6 +59,8 @@
                 filterBookmarksChecked: false,
                 doneLoading: false,
                 sortBySelect: 'new',
+                searchTerm: '',
+				isSearchResults: false,
             }
         },
         props: [
@@ -145,8 +147,34 @@
 					likes: updatedLikes
 				});
 			},
+            async search() {
+				if (this.searchTerm.length < 3) {
+					alert('Atleast 3 characters required for search');
+					return;
+				}
+				this.isSearchResults = true;
+
+				await this.fetchUserPosts();
+				this.doneLoading = false;
+
+				// search posts
+				let postHits = [];
+				for (const post of this.posts) {
+					if (post.titlePlainText.toLowerCase().includes(this.searchTerm.toLowerCase()) || post.contentPlainText.toLowerCase().includes(this.searchTerm.toLowerCase())) {
+						postHits.push(post);
+					}
+				}
+
+				this.posts = postHits;
+
+				this.doneLoading = true;
+			},
+			async clearSearch() {
+				this.isSearchResults = false;
+				await this.fetchUserPosts();
+			},
             async fetchUserPosts() {
-                this.doneLoading = true;
+                this.doneLoading = false;
 
                 this.posts = [];
 
@@ -176,7 +204,9 @@
                     this.posts.push({
                         id: doc.id,
                         titleHTML: doc.data().titleHTML,
+                        titlePlainText: doc.data().titlePlainText,
                         contentHTML: doc.data().contentHTML,
+                        contentPlainText: doc.data().contentPlainText,
                         postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
                         authorUsername: doc.data().authorUsername,
                         lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
