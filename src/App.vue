@@ -26,7 +26,7 @@
 				</select>
 			</div>
 			
-			<router-link v-if="showAutomodToolsButton" to="/automod-tools">Automod Tools</router-link>
+			<router-link v-if="showAutomodToolsButton" :to="`/communities/${communityName}/automod-tools`">Automod Tools</router-link>
 
 			<div class="dropdown" v-show="isUserLoggedIn">
 				<button class="notifications-button" @click="showNotifications">Notifications ({{ unreadNotificationsCount }})</button>
