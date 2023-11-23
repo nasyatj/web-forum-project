@@ -369,6 +369,10 @@ import { tSThisType } from '@babel/types';
         padding: 20px;
     }
 
+   h2 {
+	font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif;
+	}
+
     nav a, nav span, nav button {
         margin: 10px;
         color: black;
