@@ -347,9 +347,9 @@ import { tSThisType } from '@babel/types';
     }
 	.floating-circle {
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.2); /* Dark grey, semi-transparent */
+    width: 150px;
+    height: 150px;
+    background-color: rgba(0, 0, 0, 0.1); /* Dark grey, semi-transparent */
     border-radius: 50%;
     animation: floatAnimation 20s infinite ease-in-out;
   }
@@ -357,19 +357,19 @@ import { tSThisType } from '@babel/types';
   /* Define several keyframes for different animation paths */
   @keyframes floatAnimation {
     0% {
-      transform: translate(0px, 0px);
+      transform: translateX(0px) translateY(0px);
     }
     25% {
-      transform: translate(100px, -150px);
+      transform: translateX(calc(100vw - 100px)) translateY(calc(100vh - 100px));
     }
     50% {
-      transform: translate(-120px, 200px);
+      transform: translateX(0px) translateY(calc(100vh - 100px));
     }
     75% {
-      transform: translate(150px, -100px);
+      transform: translateX(calc(100vw - 100px)) translateY(0px);
     }
     100% {
-      transform: translate(0px, 0px);
+      transform: translateX(0px) translateY(0px);
     }
   }
 
