@@ -319,11 +319,13 @@
 		margin-top: -15px;
 		margin-bottom: -10px;
 		font-size: 30px;
+		color: #000;
+		padding-left: 30px;
 		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 	}
 
 	.post-content {
-		padding-left: 20px;
+		padding-left: 30px;
 		margin-top: 30px;
 		font-weight: bold; /* Makes post content text bolder */
 		padding-right: 20px;
@@ -344,6 +346,8 @@
 
 	.post-community {
 		display: block;
+		padding-left: 30px;
+		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 		color: #FF7F50; /* Coral Link */
 		margin-top: 10px;
 		text-decoration: underline !important;
