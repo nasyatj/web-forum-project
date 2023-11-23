@@ -25,6 +25,7 @@
                         <span class="comment-date">{{ comment.date }}</span>
                     </div>
                     <p v-html="comment.commentHTML" class="comment-content"></p>
+                    <button @click="$router.push({name: 'edit-comment', params: {commentID: comment.key, postID: comment.postID, isUserLoggedIn: isUserLoggedIn, loggedInUsername: loggedInUsername }})" v-if="loggedInUsername == comment.author">Edit Comment</button>
                 </div>
             </div>
         </div>
