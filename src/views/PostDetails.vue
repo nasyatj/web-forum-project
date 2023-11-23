@@ -199,7 +199,9 @@
 
 
     .post {
-		border: 1px solid black;
+		border: 4px solid black;
+		border-radius: 10px;
+		background-color: white;
 		text-align: left;
 		padding-right: 20px; /* Add padding to the right for closer alignment */
 		max-width: 600px;
