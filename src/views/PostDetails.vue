@@ -9,6 +9,7 @@
                 </div>
                 <h2 v-html="titleHTML" class="post-title"></h2>
                 <p v-html="contentHTML" class="post-content"></p>
+                <p><img :src="imgLinkPlain" width="400" /></p>
             </div>
 
             <form @submit.prevent="handleAddComment" v-show="isUserLoggedIn">
