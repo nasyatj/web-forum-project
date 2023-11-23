@@ -332,7 +332,7 @@
 	}
 
 	.post a {
-		color: #008080; /* Teal Link */
+		color: #000; /* Teal Link */
         	text-decoration: none;
 	}
 
