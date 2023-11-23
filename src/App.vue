@@ -367,7 +367,6 @@ import { tSThisType } from '@babel/types';
 
     header {
         display: flex;
-	margin-left: 20px;
 	padding-right: 20px; 
         border-bottom: 1px solid #FF7F50; /* Coral Border */
         background-color: #008080; /* Teal Background */
