@@ -330,6 +330,7 @@ import { tSThisType } from '@babel/types';
         text-align: center;
         color: #008080; /* Teal Text */
         background-color: #d3d3d3;
+	min-height: 100vh;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
