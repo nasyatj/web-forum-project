@@ -306,6 +306,10 @@
 		margin: 10px auto;
 		color: #FFFFFF; /* White text color */
 	}
+	.sidebar-content sticky{
+		border: 3px solid orange; /* Bold orange border */
+        border-radius: 10px; /* Rounded corners */
+	}
 
 	.post-metadata {
 		font-size: 16px;
