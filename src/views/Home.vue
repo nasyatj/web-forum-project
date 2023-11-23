@@ -318,7 +318,7 @@
 	.post-title {
 		margin-top: -15px;
 		margin-bottom: -10px;
-		font-size: 20px;
+		font-size: 40px;
 		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 	}
 
