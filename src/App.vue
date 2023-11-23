@@ -331,30 +331,17 @@ import { tSThisType } from '@babel/types';
         color: #008080; /* Teal Text */
         background: linear-gradient(270deg, #e0e0e0, #c0c0c0, #a0a0a0, #b2b2b2);
   	background-size: 800% 800%;
-
-  	-webkit-animation: AnimationName 30s ease infinite;
-  	-moz-animation: AnimationName 30s ease infinite;
-  	animation: AnimationName 30s ease infinite;
+  	animation: GradientAnimation 30s ease infinite;
 	min-height: 100vh;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
         outline: none;
     }
-	@-webkit-keyframes AnimationName {
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
-@-moz-keyframes AnimationName {
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
-@keyframes AnimationName { 
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
+	@keyframes GradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
     header {
