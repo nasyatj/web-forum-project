@@ -59,9 +59,14 @@
 	-->
 
 	<div class="floating-circles-container">
-        <div class="floating-circle" style="top: 10%; left: 20%;"></div>
-        <div class="floating-circle" style="top: 70%; left: 80%;"></div>
-        <div class="floating-circle" style="top: 30%; left: 50%;"></div>
+        <div class="floating-circle" style="animation-duration: 22s;"></div>
+    <div class="floating-circle" style="animation-duration: 18s;"></div>
+    <div class="floating-circle" style="animation-duration: 20s; animation-delay: 5s;"></div>
+    <div class="floating-circle" style="animation-duration: 25s; animation-delay: 3s;"></div>
+    <div class="floating-circle" style="animation-duration: 19s; animation-delay: 2s;"></div>
+    <div class="floating-circle" style="animation-duration: 23s; animation-delay: 4s;"></div>
+    <div class="floating-circle" style="animation-duration: 21s; animation-delay: 6s;"></div>
+    <div class="floating-circle" style="animation-duration: 17s; animation-delay: 1s;"></div>
         <!-- More circles as needed -->
     </div>
 	<router-view 
