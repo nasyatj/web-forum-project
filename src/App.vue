@@ -374,7 +374,7 @@ import { tSThisType } from '@babel/types';
     }
 
 	header h1 {
-  	 font-size: 52px;
+  	 font-size:42px;
   	margin-left: 20px; /* Or as much as needed to move it to the right */
   
 }
