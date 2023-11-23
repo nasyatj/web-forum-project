@@ -354,7 +354,7 @@ import { tSThisType } from '@babel/types';
         display: flex;
 	padding-right: 20px; 
         border-bottom: 1px solid #FF7F50; /* Coral Border */
-        background-color: #e73c7e;
+        background-color: #23a6d5;
         color: #000; /* black Text */
     }
 
