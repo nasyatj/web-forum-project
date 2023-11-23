@@ -445,7 +445,9 @@
 		padding-left: 5px;
 		color: #008080;
 		margin-top: 10px;
+		font-weight: bold;
 		font-size: 20px;
+		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 		text-decoration: underline !important;
 	}
 

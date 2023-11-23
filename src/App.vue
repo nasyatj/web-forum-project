@@ -270,7 +270,28 @@ import { tSThisType } from '@babel/types';
 	.hide {
 		display: none;
 	}
+ 
+	::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
 
+/* Customizes the background of the scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* color of the tracking area */
+  border-radius: 10px;
+}
+
+/* Customizes the scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background-color: #ff4500; /* color of the scroll thumb */
+  border-radius: 10px;
+  border: 3px solid #ffffff; /* creates padding around scroll thumb */
+}
+
+/* Handles the hover state of the scrollbar handle */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #b30000; /* color when hover */
+}
 	.notification {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.4);
