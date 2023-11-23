@@ -327,7 +327,7 @@ import { tSThisType } from '@babel/types';
         font-family: Avenir, Helvetica, Arial, sans-serif;
         text-align: center;
         color: #008080; /* Teal Text */
-        background-color: #FFFFFF; /* White Background */
+        background-color: #d3d3d3;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
