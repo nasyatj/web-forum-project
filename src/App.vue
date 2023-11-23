@@ -355,7 +355,7 @@ import { tSThisType } from '@babel/types';
 	padding-right: 20px; 
         border-bottom: 1px solid #FF7F50; /* Coral Border */
         background-color: #e73c7e;
-        color: #FFFFFF; /* White Text */
+        color: #000; /* black Text */
     }
 
 	header h1 {
