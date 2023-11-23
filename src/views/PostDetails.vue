@@ -167,6 +167,8 @@
 	}
 
 	.sidebar {
+		border: 3px solid orange; /* Bold orange border */
+        border-radius: 10px; /* Rounded corners */
 		text-align: left;
         position: relative;
 	}
