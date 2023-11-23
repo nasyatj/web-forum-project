@@ -329,7 +329,7 @@ import { tSThisType } from '@babel/types';
         font-family: Avenir, Helvetica, Arial, sans-serif;
         text-align: center;
         color: #008080; /* Teal Text */
-        background: linear-gradient(270deg, #e0e0e0, #c0c0c0, #a0a0a0, #808080);
+        background: linear-gradient(270deg, #e0e0e0, #c0c0c0, #a0a0a0, #b2b2b2);
   	background-size: 800% 800%;
 
   	-webkit-animation: AnimationName 30s ease infinite;
