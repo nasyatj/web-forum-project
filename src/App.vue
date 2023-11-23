@@ -352,7 +352,14 @@ import { tSThisType } from '@babel/types';
 	}
 }
 
-    header {
+     body{
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+	margin: 0px;
+     }
+     header {
         display: flex;
 	padding-right: 20px; 
         border-bottom: 1px solid #FF7F50; /* Coral Border */
