@@ -378,7 +378,7 @@ import { tSThisType } from '@babel/types';
 
     nav a, nav span, nav button {
         margin: 10px;
-        color: black;
+        color: white;
     }
 
     nav a {
