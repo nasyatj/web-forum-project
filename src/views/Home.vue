@@ -7,7 +7,7 @@
 				<button @click="clearSearch">Clear</button>
 			</form>
 
-			<h2 v-show="!isUserLoggedIn">Sign in to create posts and comment</h2>
+			<h2 v-show="!isUserLoggedIn">Sign In To Create Posts And Comment</h2>
 			<router-link to="/create-post" v-show="isUserLoggedIn">Create Post</router-link>
 
 			<div class="sort-by-container">
