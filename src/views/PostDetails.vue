@@ -9,7 +9,7 @@
                 </div>
                 <h2 v-html="titleHTML" class="post-title"></h2>
                 <p v-html="contentHTML" class="post-content"></p>
-                <p><img :src="imgLinkPlain" width="400" /></p>
+                <p class="image-box"><img :src="imgLinkPlain" width="400" /></p>
             </div>
 
             <form @submit.prevent="handleAddComment" v-show="isUserLoggedIn">
@@ -228,6 +228,13 @@
         	font-weight: bold; /* Optional: Makes post content text bolder */
 		margin-top: 30px;
 	}
+
+    .image-box{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 65%;
+    }
 
     .post-last-edited-date {
         display: block;
