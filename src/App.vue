@@ -352,6 +352,7 @@ import { tSThisType } from '@babel/types';
     background-color: rgba(0, 0, 0, 0.1); /* Dark grey, semi-transparent */
     border-radius: 50%;
     animation: floatAnimation 40s infinite ease-in-out;
+	z-index: -1; 
   }
 
   /* Define several keyframes for different animation paths */
