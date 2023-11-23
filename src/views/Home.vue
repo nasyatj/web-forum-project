@@ -352,4 +352,31 @@
 		padding: 5px 10px;
 		border-radius: 20px;
 	}
+	.floating-circle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.2); /* Dark grey, semi-transparent */
+    border-radius: 50%;
+    animation: floatAnimation 20s infinite ease-in-out;
+  }
+
+  /* Define several keyframes for different animation paths */
+  @keyframes floatAnimation {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(100px, -150px);
+    }
+    50% {
+      transform: translate(-120px, 200px);
+    }
+    75% {
+      transform: translate(150px, -100px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
 </style>
