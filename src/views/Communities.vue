@@ -443,8 +443,9 @@
 	.post-community {
 		display: block;
 		padding-left: 5px;
-		color: blue !important;
+		color: #008080;
 		margin-top: 10px;
+		font-size: 20px;
 		text-decoration: underline !important;
 	}
 
