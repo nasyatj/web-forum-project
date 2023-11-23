@@ -346,7 +346,7 @@
 
 	.post-community {
 		display: block;
-		padding-left: 15px;
+		padding-left: 5px;
 		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 		color: #FF7F50; /* Coral Link */
 		margin-top: 10px;
