@@ -326,6 +326,7 @@
 <style scoped>
 	.grid-container {
 		display: grid;
+		gap: 20px; 
 		max-width: 900px;
 		grid-template-columns: 2fr 1fr;
 		margin: auto;
