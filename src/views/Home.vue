@@ -323,6 +323,7 @@
 	}
 
 	.post-content {
+		padding-left: 20px;
 		margin-top: 30px;
 		font-weight: bold; /* Makes post content text bolder */
 		padding-right: 20px;
