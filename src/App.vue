@@ -334,7 +334,9 @@ import { tSThisType } from '@babel/types';
 	animation: gradientBG 15s ease infinite;
 	min-height: 100vh;
         box-sizing: border-box;
-        margin: 0;
+        height: 100%;
+  	width: 100%;
+	margin: 0;
         padding: 0;
         outline: none;
     }
