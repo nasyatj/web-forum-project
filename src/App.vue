@@ -371,6 +371,7 @@ import { tSThisType } from '@babel/types';
 
    h2 {
 	font-size:30px;
+	color: #FFFFFF;
 	font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif;
 	}
 
