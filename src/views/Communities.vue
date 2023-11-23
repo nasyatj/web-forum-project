@@ -398,7 +398,7 @@
 	.post {
 		border: 4px solid black;
                 border-radius: 10px;
-                background-color: #FF7F50;
+                background-color: #ffff;
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
