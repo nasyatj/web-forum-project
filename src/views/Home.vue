@@ -304,7 +304,7 @@
 		max-width: 600px;
 		border-radius: 5px; /* Optional: Rounded corners */
 		margin: 10px auto;
-		color: #FFFFFF; /* White text color */
+		color: #000; /* White text color */
 	}
 	.sidebar-content sticky{
 		border: 3px solid orange; /* Bold orange border */
