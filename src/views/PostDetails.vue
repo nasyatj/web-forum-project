@@ -167,8 +167,7 @@
 	}
 
 	.sidebar {
-		border: 3px solid orange; /* Bold orange border */
-        border-radius: 10px; /* Rounded corners */
+		
 		text-align: left;
         position: relative;
 	}
@@ -179,7 +178,8 @@
 		max-width: 100%;
         position: absolute;
 		top: 30px;
-		border: 1px solid black;
+		border: 3px solid orange;
+		border-radius: 10px; /* Rounded corners */
 	}
 
 	.sidebar-links a {
