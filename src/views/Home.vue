@@ -358,9 +358,9 @@
     }
 
 	.post {
-		border: 4px solid #008080; /* Teal Border */
+		border: 4px solid #000; /* black Border */
 		text-align: left;
-		background-color: #FF7F50; /* Coral Background */
+		background-color: #f0f0f0; /* grey-white Background */
 		max-width: 600px;
 		border-radius: 5px; /* Optional: Rounded corners */
 		margin: 10px auto;
