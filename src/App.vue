@@ -57,6 +57,13 @@
 		  indicating user has either signed up or logged in and to therefore replace 'Log In' and 'Sign Up' buttons
 		  with 'Log Out' 
 	-->
+
+	<div class="floating-circles-container">
+        <div class="floating-circle" style="top: 10%; left: 20%;"></div>
+        <div class="floating-circle" style="top: 70%; left: 80%;"></div>
+        <div class="floating-circle" style="top: 30%; left: 50%;"></div>
+        <!-- More circles as needed -->
+    </div>
 	<router-view 
 		v-bind:isUserLoggedIn="isUserLoggedIn"
 		v-bind:loggedInUsername="loggedInUsername"
