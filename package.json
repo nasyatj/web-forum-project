@@ -10,6 +10,7 @@
     "@vueup/vue-quill": "^1.2.0",
     "core-js": "^3.8.3",
     "firebase": "^10.5.2",
+    "particles.js": "^2.0.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuetify": "^3.3.23"
