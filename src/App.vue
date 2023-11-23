@@ -329,19 +329,25 @@ import { tSThisType } from '@babel/types';
         font-family: Avenir, Helvetica, Arial, sans-serif;
         text-align: center;
         color: #008080; /* Teal Text */
-        background: linear-gradient(270deg, #e0e0e0, #c0c0c0, #a0a0a0, #b2b2b2);
-  	background-size: 800% 800%;
-  	animation: GradientAnimation 30s ease infinite;
+        background: linear-gradient(-45deg, #000000, #808080, #ffffff, #cccccc);
+	background-size: 400% 400%;
+	animation: gradientBG 15s ease infinite;
 	min-height: 100vh;
         box-sizing: border-box;
         margin: 0;
         padding: 0;
         outline: none;
     }
-	@keyframes GradientAnimation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+	@keyframes gradientBG {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
     header {
