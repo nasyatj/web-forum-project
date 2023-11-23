@@ -359,7 +359,8 @@ import { tSThisType } from '@babel/types';
     }
 
 	header h1 {
-  	 font-size:35px;
+  	color: #FF7F50; 
+	font-size:35px;
 	font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif;
   	margin-left: 20px; /* Or as much as needed to move it to the right */
   
