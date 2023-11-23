@@ -8,6 +8,9 @@
         <h3>Content:</h3>
         <QuillEditor v-model:content="content" content-type="html" ref="contentEditor" required />
 
+        <h4>Image Upload:</h4>
+        <QuillEditor v-model:imgLink="imgLink" content-type="html" ref="imgBox" required />
+
         <h3>Community to post in:</h3>
         <select class="select-community" v-model="selectedCommunity" required>
             <option v-for="community in communities" :value="community.name" class="select-community-options">{{ community.name }}</option>
@@ -37,6 +40,7 @@
 			return {
                 title: '',
                 content: '',
+                imgLink:'',
                 selectedCommunity: '',
                 communities: [],
                 communityFlairs: [],
@@ -67,6 +71,8 @@
                     titlePlainText: this.$refs.titleEditor.getText(),
                     contentHTML: this.content,
                     contentPlainText: this.$refs.contentEditor.getText(),
+                    imgLink: this.imgLink,
+                    imgLinkPlain: this.$refs.imgBox.getText(),
                     postDate: currentDate,
                     authorUsername: this.loggedInUsername,
                     lastEdited: '',
@@ -82,6 +88,8 @@
                     id: addedPost.id,
                     titlePlainText: this.$refs.titleEditor.getText(),
                     contentPlainText: this.$refs.contentEditor.getText(),
+                    imgLink: this.imgLink,
+                    imgLinkPlain: this.$refs.imgBox.getText(),
                     postDate: currentDate,
                     community: this.selectedCommunity,
                 });

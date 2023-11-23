@@ -9,6 +9,7 @@
                 </div>
                 <h2 v-html="titleHTML" class="post-title"></h2>
                 <p v-html="contentHTML" class="post-content"></p>
+                <p><img :src="imgLinkPlain" width="400" /></p>
             </div>
 
             <form @submit.prevent="handleAddComment" v-show="isUserLoggedIn">
@@ -59,6 +60,7 @@
                 titlePlainText: '',
                 contentHTML: '',
                 contentPlainText: '',
+                imgLinkPlain: '',
                 postDate: '',
                 authorUsername: '',
                 commentHTML: '',
@@ -93,6 +95,7 @@
             this.titlePlainText = docSnapshot.data().titlePlainText;
             this.contentHTML = docSnapshot.data().contentHTML;
             this.contentPlainText = docSnapshot.data().contentPlainText;
+            this.imgLinkPlain = docSnapshot.data().imgLinkPlain;
             this.postDate = docSnapshot.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
             this.authorUsername = docSnapshot.data().authorUsername;
             this.lastEdited = docSnapshot.data().lastEdited != '' ? docSnapshot.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
