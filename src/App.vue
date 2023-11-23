@@ -373,6 +373,12 @@ import { tSThisType } from '@babel/types';
         color: #FFFFFF; /* White Text */
     }
 
+	header h1 {
+  
+  margin-left: 20px; /* Or as much as needed to move it to the right */
+  
+}
+
     nav {
         display: flex;
         padding: 20px;
