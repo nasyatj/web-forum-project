@@ -421,7 +421,4 @@
 		padding: 5px 10px;
 		border-radius: 20px;
 	}
-
-  
-  
 </style>

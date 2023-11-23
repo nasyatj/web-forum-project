@@ -275,6 +275,7 @@ import { tSThisType } from '@babel/types';
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 		z-index: 11;
+		position: relative;
 	}
 	
 	.notification:hover {

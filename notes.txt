@@ -1,13 +1,11 @@
 homepage (signed out -> most recent posts, signed in -> communities joined posts, then other posts)
 
-search component inside communities (search posts and communities)
 replace alerts with dialog notifications
 edit username problem (use seperate displaname), (show last in demo)
-
-
 replace likes and bookmarks with icons
 edit community
 
+demonstration:
 create account for demo that is owner of community to show everything
 add description to user stories on trello (as a user i want because, defiintion of done, etc)
     

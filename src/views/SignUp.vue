@@ -60,6 +60,7 @@
 					password: this.password,
 					username: this.username,
 					bookmarks: [],
+					notifications: [],
 				});
 
 				alert('Your account has been created!');
