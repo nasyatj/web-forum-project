@@ -58,9 +58,10 @@
 			:isCommunitySidebar="false"
 		/>
 
-		<!-- pagination button to be added later
-		<button>Load More</button> 
-		-->
+		<!--PAGINATION load more button-->
+		<div class="text-center">
+		<button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
+		</div>
 	</div>
 
 	<!-- Spinner -->
@@ -77,6 +78,7 @@
 		data() {
 			return {
 				posts: [],
+				lastPost: null,
 				topCommunities: [],
 				doneLoading: false,
 				sortBySelect: 'new',
@@ -210,7 +212,7 @@
 				// get most recent posts right now, but need to be ordered by likes most reecently (add like/dislike)
 				this.posts = [];
 
-				let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
+				let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'), limit(5));
 				let querySnapshot = await getDocs(q);
 				for (const doc of querySnapshot.docs) {
 					// find out if post liked by current logged in user
@@ -252,9 +254,67 @@
 					});
 				}
 
-				// pagination to be added later: https://firebase.google.com/docs/firestore/query-data/query-cursors
+				// Pagination - Get the last visible document
+				let lastPost = querySnapshot.docs[(querySnapshot.docs.length-1)];
+				this.lastPost = lastPost;
 
 				this.doneLoading = true;
+			},
+			async loadMore(){
+				this.doneLoading = false;
+
+				// get most recent posts right now, but need to be ordered by likes most reecently (add like/dislike)
+				this.posts = [];
+
+				let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'), startAfter(this.lastPost), limit(5));
+				let querySnapshot = await getDocs(q);
+
+				for (const doc of querySnapshot.docs) {
+					// find out if post liked by current logged in user
+					let isLikedByCurrentUser = false;
+					if (this.isUserLoggedIn == true) {
+						doc.data().likes.forEach(likedByUsername => {
+							if (likedByUsername == this.loggedInUsername) {
+								isLikedByCurrentUser = true;
+								return;
+							}
+						});
+					}
+
+					// find out if post bookmarked by current logged in user
+					let isBookmarkedByCurrentUser = false;
+					if (this.isUserLoggedIn == true) {
+						let temp = await getDocs(query(collection(db, 'users'), where('username', '==', this.loggedInUsername), where('bookmarks', 'array-contains', doc.id)));
+						if (temp.docs.length > 0)
+							isBookmarkedByCurrentUser = true;
+					}
+
+					this.posts.push({
+						id: doc.id,
+						type: 'post',
+						titleHTML: doc.data().titleHTML,
+						titlePlainText: doc.data().titlePlainText,
+						contentHTML: doc.data().contentHTML,
+						contentPlainText: doc.data().contentPlainText,
+						postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+						authorUsername: doc.data().authorUsername,
+						lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+						likes: doc.data().likes,
+						dislikes: doc.data().dislikes,
+						community: doc.data().community,
+						flair: doc.data().flair,
+						isLikedByCurrentUser: isLikedByCurrentUser,
+						isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
+						postDateTimestamp: doc.data().postDate,
+					});
+
+				
+				// Pagination - Get the last visible document
+				let lastPost = querySnapshot.docs[(querySnapshot.docs.length-1)];
+				this.lastPost = lastPost;
+
+				this.doneLoading = true;
+				}
 			}
 		},
 		async mounted() {
