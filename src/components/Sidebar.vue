@@ -89,6 +89,7 @@
 		padding: 10px;
 		margin: 10px;
 		max-width: 100%;
+		background-color: white;
 		border: 3px solid orange; /* Bold orange border */
         border-radius: 10px; /* Rounded corners */
 	}
