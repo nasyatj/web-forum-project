@@ -336,34 +336,7 @@ import { tSThisType } from '@babel/types';
         padding: 0;
         outline: none;
     }
-	.floating-circle {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    background-color: rgba(0, 0, 0, 0.1); /* Dark grey, semi-transparent */
-    border-radius: 50%;
-    animation: floatAnimation 40s infinite ease-in-out;
-	z-index: -1; 
-  }
-
-  /* Define several keyframes for different animation paths */
-  @keyframes floatAnimation {
-    0% {
-      transform: translateX(0px) translateY(0px);
-    }
-    25% {
-      transform: translateX(calc(100vw - 100px)) translateY(calc(100vh - 100px));
-    }
-    50% {
-      transform: translateX(0px) translateY(calc(100vh - 100px));
-    }
-    75% {
-      transform: translateX(calc(100vw - 100px)) translateY(0px);
-    }
-    100% {
-      transform: translateX(0px) translateY(0px);
-    }
-  }
+	
 
     header {
         display: flex;

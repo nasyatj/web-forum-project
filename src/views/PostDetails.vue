@@ -213,12 +213,14 @@
 	}
 
 	.post-title {
+		padding-left: 5px;
 		margin-top: -15px;
 		margin-bottom: -10px;
 	}
 
 	.post-content {
-		color: #FFFFFF; /* White Text */
+		color: #000; 
+		padding-left: 30px;
         	font-weight: bold; /* Optional: Makes post content text bolder */
 		margin-top: 30px;
 	}
