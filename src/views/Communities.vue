@@ -410,11 +410,13 @@
 	}
 
 	.post-title {
+		padding-left: 5px;
 		margin-top: -15px;
 		margin-bottom: -10px;
 	}
 
 	.post-content {
+		padding-left: 30px;
 		margin-top: 30px;
 	}
 
@@ -440,6 +442,7 @@
 
 	.post-community {
 		display: block;
+		padding-left: 5px;
 		color: blue !important;
 		margin-top: 10px;
 		text-decoration: underline !important;
