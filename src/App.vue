@@ -291,7 +291,7 @@ import { tSThisType } from '@babel/types';
 /* Handles the hover state of the scrollbar handle */
 ::-webkit-scrollbar-thumb:hover {
   background-color: #b30000; /* color when hover */
-
+}
 	.notification {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.4);
