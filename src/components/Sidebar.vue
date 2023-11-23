@@ -89,7 +89,8 @@
 		padding: 10px;
 		margin: 10px;
 		max-width: 100%;
-		border: 1px solid black;
+		border: 3px solid orange; /* Bold orange border */
+        border-radius: 10px; /* Rounded corners */
 	}
 
     .sticky {
