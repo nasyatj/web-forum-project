@@ -272,7 +272,7 @@
 	}
 
     .post button {
-         padding: 10px 20px;
+         padding: 5px 10px;
     cursor: pointer;
     margin-right: 10px;
     border: none;
