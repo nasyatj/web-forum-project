@@ -204,6 +204,7 @@
 			},
 			async clearSearch() {
 				this.isSearchResults = false;
+				this.searchTerm = '';
 				await this.fetchPosts();
 			},
 			async fetchPosts() {
