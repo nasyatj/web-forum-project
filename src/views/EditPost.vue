@@ -67,7 +67,7 @@
                 alert('Your post has been successfully updated');
                 this.title = '';
                 this.content = '';
-
+                this.imgLink = '';
                 this.navigateBack();
             },
             async navigateBack() {
@@ -78,6 +78,7 @@
             const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
             this.title = docSnapshot.data().titleHTML;
             this.content = docSnapshot.data().contentHTML;
+            this.imgLink = docSnapshot.data().imgLinkPlain;
             this.selectedFlair = docSnapshot.data().flair;
 
             let communityName = docSnapshot.data().community;
