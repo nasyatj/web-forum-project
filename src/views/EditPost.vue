@@ -9,7 +9,7 @@
         <QuillEditor v-model:content="content" content-type="html" ref="contentEditor" required />
 
         <h4>Image Upload:</h4>
-        <QuillEditor v-model:imgLink="imgLink" content-type="html" ref="imgBox" required />
+        <QuillEditor v-model:content="imgLink" content-type="html" ref="imgBox" required />
 
         <div class="flair-selector" v-show="communityFlairs.length > 0">
             <h3>Flair:</h3>
@@ -78,7 +78,7 @@
             const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
             this.title = docSnapshot.data().titleHTML;
             this.content = docSnapshot.data().contentHTML;
-            this.imgLink = docSnapshot.data().imgLinkPlain;
+            this.imgLink = docSnapshot.data().imgLink;
             this.selectedFlair = docSnapshot.data().flair;
 
             let communityName = docSnapshot.data().community;
