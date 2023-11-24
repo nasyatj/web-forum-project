@@ -277,7 +277,7 @@
     margin-right: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #23d5ab;
     color: white;
     text-transform: uppercase;
     font-weight: bold;
@@ -291,7 +291,7 @@
 }
 
 .post button.like-button {
-    background-color: #28a745;
+    background-color: #23a6d5;
 }
 
 .post button.like-button:hover {
@@ -299,7 +299,7 @@
 }
 
 .post button.bookmark-button {
-    background-color: #ffc107;
+    background-color: #e73c7e;
 }
 
 .post button.bookmark-button:hover {
@@ -307,11 +307,19 @@
 }
 
 .post button.delete-button {
-    background-color: #dc3545;
+    background-color: #ee7752;
 }
 
 .post button.delete-button:hover {
     background-color: #c82333;
+}  
+
+	.post .button-container {
+    position: absolute;
+    bottom: 10px; /* Adjust this value to move the buttons up from the bottom */
+    left: 0;
+    right: 0;
+    text-align: center; /* This will center the buttons */
 }
 
     .post-last-edited-date {
