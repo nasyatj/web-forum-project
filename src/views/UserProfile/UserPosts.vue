@@ -233,7 +233,9 @@
 
 <style scoped>
 	.post {
-		border: 1px solid black;
+		border: 4px solid black;
+		border-radius: 10px;
+		background-color: white;
 		text-align: left;
 		max-width: 600px;
 		margin: 10px auto;
@@ -244,6 +246,7 @@
 	}
 
 	.post-title {
+		padding-left: 5px;
 		margin-top: -15px;
 		margin-bottom: -10px;
 	}
@@ -256,7 +259,10 @@
     }
 
 	.post-content {
-		margin-top: 30px;
+	color: #000; 
+	padding-left: 30px;
+        font-weight: bold;	
+	margin-top: 30px;
 	}
 
 	.post a {
