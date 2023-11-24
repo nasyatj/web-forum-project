@@ -379,8 +379,13 @@ import { tSThisType } from '@babel/types';
         width: 100%;
         margin: 0;
         padding: 0;
+	overflow-x: hidden;
+	max-width: 100%;
 	margin: 0px;
      }
+     * {
+  	box-sizing: border-box;
+	}
      header {
         display: flex;
 	padding-right: 20px; 
