@@ -407,6 +407,18 @@ import { tSThisType } from '@babel/types';
         padding: 20px;
     }
 
+	.post button.like-button {
+    background-color: #23a6d5;
+}
+
+.post button.like-button:hover {
+    background-color: #218838;
+}
+
+.post button.bookmark-button {
+    background-color: #e73c7e;
+}
+
    h2 {
 	font-size:30px;
 	color: #000;
