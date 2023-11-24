@@ -272,10 +272,47 @@
 	}
 
     .post button {
-        padding: 10px;
-        cursor: pointer;
-        margin-right: 10px;
+         padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none; 
     }
+
+	.post button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.post button.like-button {
+    background-color: #28a745;
+}
+
+.post button.like-button:hover {
+    background-color: #218838;
+}
+
+.post button.bookmark-button {
+    background-color: #ffc107;
+}
+
+.post button.bookmark-button:hover {
+    background-color: #e0a800;
+}
+
+.post button.delete-button {
+    background-color: #dc3545;
+}
+
+.post button.delete-button:hover {
+    background-color: #c82333;
+}
 
     .post-last-edited-date {
         display: block;
