@@ -8,6 +8,9 @@
         <h3>Content:</h3>
         <QuillEditor v-model:content="content" content-type="html" ref="contentEditor" required />
 
+        <h4>Image Upload:</h4>
+        <QuillEditor v-model:imgLink="imgLink" content-type="html" ref="imgBox" required />
+
         <div class="flair-selector" v-show="communityFlairs.length > 0">
             <h3>Flair:</h3>
             <span class="selected-flair" :style="{ backgroundColor: selectedFlair.color }">{{ selectedFlair.text ? selectedFlair.text : 'No flair selected' }}</span>
@@ -35,6 +38,7 @@
 			return {
                 title: '',
                 content: '',
+                imgLink:'',
                 communityFlairs: [],
                 selectedFlair: {},
 			}
@@ -53,6 +57,8 @@
                     titleHTML: this.title,
                     titlePlainText: this.$refs.titleEditor.getText(),
                     contentHTML: this.content,
+                    imgLink: this.imgLink,
+                    imgLinkPlain: this.$refs.imgBox.getText(),
                     contentPlainText: this.$refs.contentEditor.getText(),
                     lastEdited: new Date(),
                     flair: this.selectedFlair,

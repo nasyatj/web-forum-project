@@ -31,6 +31,7 @@
 						</div>
 						<h2 v-html="post.titleHTML" class="post-title"></h2>
 						<p v-html="post.contentHTML" class="post-content"></p>
+						<p class="image-box"><img :src="post.imgLinkPlain" width="400" /></p>
 					</router-link>
 
 					<button class="like-button" @click="like(post.id, post.isLikedByCurrentUser)" v-show="isUserLoggedIn">{{ post.isLikedByCurrentUser ? 'Unlike' : 'Like' }}</button>
@@ -242,6 +243,7 @@
 						titlePlainText: doc.data().titlePlainText,
 						contentHTML: doc.data().contentHTML,
 						contentPlainText: doc.data().contentPlainText,
+						imgLinkPlain: doc.data().imgLinkPlain,
 						postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
 						authorUsername: doc.data().authorUsername,
 						lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
@@ -297,6 +299,7 @@
 						titlePlainText: doc.data().titlePlainText,
 						contentHTML: doc.data().contentHTML,
 						contentPlainText: doc.data().contentPlainText,
+						imgLinkPlain: doc.data().imgLinkPlain,
 						postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
 						authorUsername: doc.data().authorUsername,
 						lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
@@ -385,6 +388,13 @@
 		padding-left: 5px;
 		font-family: Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif; /* Fallbacks for Baskerville */
 	}
+
+	.image-box{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 65%;
+    }
 
 	.post-content {
 		padding-left: 30px;
