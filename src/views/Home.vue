@@ -58,11 +58,6 @@
 			:loggedInUsername="loggedInUsername"
 			:isCommunitySidebar="false"
 		/>
-
-		<!--PAGINATION load more button-->
-		<div class="text-center">
-		<button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
-		</div>
 	</div>
 
 	<!-- Spinner -->
@@ -81,6 +76,7 @@
 				posts: [],
 				lastPost: null,
 				topCommunities: [],
+				loadingMore: false,
 				doneLoading: false,
 				sortBySelect: 'new',
 				searchTerm: '',
@@ -264,15 +260,18 @@
 				this.doneLoading = true;
 			},
 			async loadMore(){
-				this.doneLoading = false;
-
 				// get most recent posts right now, but need to be ordered by likes most reecently (add like/dislike)
-				this.posts = [];
+				const nextBatchPosts = [];
+
+				if(this.lastPost == undefined){
+					return;
+				}
 
 				let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'), startAfter(this.lastPost), limit(5));
 				let querySnapshot = await getDocs(q);
 
 				for (const doc of querySnapshot.docs) {
+
 					// find out if post liked by current logged in user
 					let isLikedByCurrentUser = false;
 					if (this.isUserLoggedIn == true) {
@@ -292,7 +291,7 @@
 							isBookmarkedByCurrentUser = true;
 					}
 
-					this.posts.push({
+					nextBatchPosts.push({
 						id: doc.id,
 						type: 'post',
 						titleHTML: doc.data().titleHTML,
@@ -311,18 +310,34 @@
 						isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
 						postDateTimestamp: doc.data().postDate,
 					});
+				}
 
-				
+				//add next batch of posts to posts
+				this.posts.push(...nextBatchPosts);
+
 				// Pagination - Get the last visible document
 				let lastPost = querySnapshot.docs[(querySnapshot.docs.length-1)];
 				this.lastPost = lastPost;
+			},
+			async handleScroll(){
+				// Check if loading is already in progress
+				if (this.loadingMore) {
+					return;
+				}
+				if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+				this.loadingMore = true;
 
-				this.doneLoading = true;
+				await this.loadMore();
+
+				this.loadingMore = false;
 				}
 			}
 		},
 		async mounted() {
 			await this.fetchPosts();
+			window.addEventListener("scroll", this.handleScroll);
+
+			
 		}
 	}
 </script>
