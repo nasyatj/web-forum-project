@@ -37,6 +37,11 @@
         <h4 v-show="posts.length == 0">No bookmarks created yet</h4>
     </div>
 
+	<!--PAGINATION load more button-->
+	<div class="text-center">
+		<button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
+	</div>
+
     <!-- Spinner -->
 	<div class="lds-dual-ring" v-show="!doneLoading">Loading...</div>
 </template>
@@ -52,6 +57,7 @@
         data() {
             return {
                 posts: [],
+				lastPost: null,
                 doneLoading: false,
                 sortBySelect: 'new',
             }
@@ -145,7 +151,7 @@
 
                 this.posts = [];
 
-                let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'));
+                let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'), limit(4));
                 let querySnapshot = await getDocs(q);
 
                 for (const doc of querySnapshot.docs) {
@@ -187,7 +193,59 @@
                     }
                 }
 
+				// Pagination - Get the last visible document
+				let lastPost = querySnapshot.docs[(querySnapshot.docs.length-1)];
+				this.lastPost = lastPost;
+
                 this.doneLoading = true;
+            },
+			async loadMore() {
+
+                const nextBatchPosts = [];
+
+                let q = query(collection(db, 'userPosts'), orderBy('postDate', 'desc'), startAfter(this.lastPost),limit(2));
+                let querySnapshot = await getDocs(q);
+
+                for (const doc of querySnapshot.docs) {
+                    // find out if post liked by current logged in user
+                    let isLikedByCurrentUser = false;
+                    if (this.isUserLoggedIn == true) {
+                        doc.data().likes.forEach(likedByUsername => {
+                            if (likedByUsername == this.loggedInUsername) {
+                                isLikedByCurrentUser = true;
+                                return;
+                            }
+                        });
+                    }
+
+                    // find out if post bookmarked by current logged in user
+                    let isBookmarkedByCurrentUser = false;
+                    if (this.isUserLoggedIn == true) {
+                        let temp = await getDocs(query(collection(db, 'users'), where('username', '==', this.loggedInUsername), where('bookmarks', 'array-contains', doc.id)));
+                        if (temp.docs.length > 0)
+                            isBookmarkedByCurrentUser = true;
+                    }
+                    
+                    if (isBookmarkedByCurrentUser == true) {
+                        nextBatchPosts.push({
+                            id: doc.id,
+                            titleHTML: doc.data().titleHTML,
+                            contentHTML: doc.data().contentHTML,
+                            postDate: doc.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+                            authorUsername: doc.data().authorUsername,
+                            lastEdited: doc.data().lastEdited != '' ? doc.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '',
+                            likes: doc.data().likes,
+                            dislikes: doc.data().dislikes,
+                            community: doc.data().community,
+                            flair: doc.data().flair,
+                            isLikedByCurrentUser: isLikedByCurrentUser,
+                            isBookmarkedByCurrentUser: isBookmarkedByCurrentUser,
+                            postDateTimestamp: doc.data().postDate,
+                        });
+                    }
+                }
+
+				this.posts.push(...nextBatchPosts);
             }
         },
         async mounted() {

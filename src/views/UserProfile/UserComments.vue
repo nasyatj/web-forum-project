@@ -15,6 +15,11 @@
             
 		</div>
     </div>
+
+    <!--PAGINATION load more button-->
+		<div class="text-center">
+		    <button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
+		</div>
       
     </div>
   </template>
@@ -24,12 +29,13 @@
   import '@vueup/vue-quill/dist/vue-quill.snow.css';
   
   import { db } from '@/firebase';
-  import { collectionGroup, query, where, getDocs, getDoc, orderBy, deleteDoc, doc } from "firebase/firestore";
+  import { collectionGroup, query, where, getDocs, getDoc, orderBy, deleteDoc, doc, limit, startAfter } from "firebase/firestore";
   
   export default {
     data() {
       return {
         comments:[],
+        lastComment: null,
       }
     },
     props: [
@@ -48,7 +54,7 @@
                 this.comments = [];
                 
                 // get comments
-                let q = query(collectionGroup(db, 'comments'), where('author', '==', this.loggedInUsername), orderBy('date', 'desc'));
+                let q = query(collectionGroup(db, 'comments'), where('author', '==', this.loggedInUsername), orderBy('date', 'desc'), limit(2));
                 const commentsSnapshot = await getDocs(q);
 
                 commentsSnapshot.forEach(doc => {
@@ -62,6 +68,44 @@
 
                     this.comments.push(commentData);
                 });
+                // Pagination - Get the last visible document
+                let lastComment = commentsSnapshot.docs[(commentsSnapshot.docs.length-1)];
+                this.lastComment = lastComment;
+            },
+            async loadMore() {
+                const nextBatchComments = [];
+
+                if(this.lastComment == undefined){
+                    return;
+                }
+                
+                // get comments
+                let q = query(collectionGroup(db, 'comments'), where('author', '==', this.loggedInUsername), orderBy('date', 'desc'), startAfter(this.lastComment), limit(2));
+                const commentsSnapshot = await getDocs(q);
+
+                commentsSnapshot.forEach(doc => {
+                    const commentData = {
+                        key: doc.id,
+                        postID: doc.data().postID || 'N/A',
+                        author: doc.data().author,
+                        commentHTML: doc.data().commentHTML,
+                        date: doc.data().date,
+                    };
+
+                    nextBatchComments.push(commentData);
+                });
+
+                this.comments.push(...nextBatchComments);
+
+                //debugging
+                console.log("nextBatchComments: ")
+                for(const p of nextBatchComments){
+                    console.log(p.commentHTML);
+                }
+
+                // Pagination - Get the last visible document
+                let lastComment = commentsSnapshot.docs[(commentsSnapshot.docs.length-1)];
+                this.lastComment = lastComment;
             }
     },
     async mounted() {

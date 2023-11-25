@@ -39,7 +39,7 @@
 
         <!--PAGINATION load more button-->
 		<div class="text-center">
-		<button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
+		    <button type="button" class="btn btn-primary btn-sm" @click="loadMore()"> <span class="fa fa-arrow-down"></span> Load More </button> 
 		</div>
 
         <h4 v-show="posts.length == 0 && isSearchResults == true">No posts found with those terms</h4>

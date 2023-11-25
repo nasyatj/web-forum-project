@@ -324,7 +324,7 @@
 				if (this.loadingMore) {
 					return;
 				}
-				if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+				if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 50) {
 				this.loadingMore = true;
 
 				await this.loadMore();
