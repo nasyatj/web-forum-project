@@ -78,7 +78,7 @@
             const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
             this.title = docSnapshot.data().titleHTML;
             this.content = docSnapshot.data().contentHTML;
-            this.imgLink = docSnapshot.data().imgLink;
+            this.imgLink = docSnapshot.data().imgLinkPlain;
             this.selectedFlair = docSnapshot.data().flair;
 
             let communityName = docSnapshot.data().community;
