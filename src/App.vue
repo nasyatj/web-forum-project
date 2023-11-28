@@ -38,14 +38,15 @@
 							<span class="notification-date">{{ notification.postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) }}</span>
 							<h4>{{ notification.titlePlainText }}</h4>
 							<p>{{ notification.contentPlainText.slice(0, 30) }}...</p>
-							<button class="remove-notification-button" @click="removeNotification(notification.id, notification.type)">X</button>
+							<button class="remove-notification-button" @click.stop="removeNotification(notification.id, notification.type)">X</button>
 						</div>
-						<div class="notification" v-if="notification.type == 'create-comment'" @click="navigateFromNotification(notification.parentPostID, notification.type)">
+						<div class="notification" v-else-if="notification.type == 'create-comment'" @click="navigateFromNotification(notification.parentPostID, notification.type)">
 							<h3>{{ notification.commentAuthor }} commented on your post</h3>
 							<span class="notification-date">{{ notification.postDate }}</span>
 							<p>{{ notification.commentPlainText }}</p>
-							<button class="remove-notification-button" @click="removeNotification(notification.id, notification.type)">X</button>
+							<button class="remove-notification-button" @click.stop="removeNotification(notification.id, notification.type)">X</button>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -201,6 +202,7 @@ import { tSThisType } from '@babel/types';
 				this.notificationsShowing = false;
 			},
 			async removeNotification(id, type) {
+				console.log(id, type);
 				this.notifications = this.notifications.filter(notification => notification.id != id && notification.type != type);
 				let newNotifications = this.notifications.reverse();
 				let q = query(collection(db, 'users'), where('username', '==', this.loggedInUsername));
@@ -314,6 +316,7 @@ import { tSThisType } from '@babel/types';
 		display: block;
 		font-size: 12px;
 		margin-top: -10px;
+		color: black !important;
 	}
 
 	/* ------------- */

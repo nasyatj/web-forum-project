@@ -83,38 +83,46 @@
             'isUserLoggedIn',
 			'loggedInUsername'
         ],
+        watch: {
+            async postID(newVal, oldVal) {
+                await this.fetchPosts();
+            },
+        },
         components: {
             QuillEditor,
             Sidebar
         },
         async mounted() {
-            this.topCommunities = [];
-
-            // get post info
-            const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
-            this.titleHTML = docSnapshot.data().titleHTML;
-            this.titlePlainText = docSnapshot.data().titlePlainText;
-            this.contentHTML = docSnapshot.data().contentHTML;
-            this.contentPlainText = docSnapshot.data().contentPlainText;
-            this.imgLinkPlain = docSnapshot.data().imgLinkPlain;
-            this.postDate = docSnapshot.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-            this.authorUsername = docSnapshot.data().authorUsername;
-            this.lastEdited = docSnapshot.data().lastEdited != '' ? docSnapshot.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
-            this.likes = docSnapshot.data().likes;
-            this.dislikes=  docSnapshot.data().dislikes;
-            this.communityName = docSnapshot.data().community;
-
-            // get community info to pass to sidebar component
-            let q = query(collection(db, 'communities'), where('name', '==', this.communityName));
-            let communitySnapshot = await getDocs(q);
-            this.communityDescription = communitySnapshot.docs[0].data().description;
-            this.communityGuidelines = communitySnapshot.docs[0].data().guidelines;
-            this.communityModerators = communitySnapshot.docs[0].data().moderators;
-            this.numOfMembers = communitySnapshot.docs[0].data().membersLength;
-
-            await this.fetchComments();
+            await this.fetchPosts();
         },
         methods: {
+            async fetchPosts() {
+                this.topCommunities = [];
+
+                // get post info
+                const docSnapshot = await getDoc(doc(db, 'userPosts', this.postID));
+                this.titleHTML = docSnapshot.data().titleHTML;
+                this.titlePlainText = docSnapshot.data().titlePlainText;
+                this.contentHTML = docSnapshot.data().contentHTML;
+                this.contentPlainText = docSnapshot.data().contentPlainText;
+                this.imgLinkPlain = docSnapshot.data().imgLinkPlain;
+                this.postDate = docSnapshot.data().postDate.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+                this.authorUsername = docSnapshot.data().authorUsername;
+                this.lastEdited = docSnapshot.data().lastEdited != '' ? docSnapshot.data().lastEdited.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+                this.likes = docSnapshot.data().likes;
+                this.dislikes=  docSnapshot.data().dislikes;
+                this.communityName = docSnapshot.data().community;
+
+                // get community info to pass to sidebar component
+                let q = query(collection(db, 'communities'), where('name', '==', this.communityName));
+                let communitySnapshot = await getDocs(q);
+                this.communityDescription = communitySnapshot.docs[0].data().description;
+                this.communityGuidelines = communitySnapshot.docs[0].data().guidelines;
+                this.communityModerators = communitySnapshot.docs[0].data().moderators;
+                this.numOfMembers = communitySnapshot.docs[0].data().membersLength;
+
+                await this.fetchComments();
+            },
             async handleAddComment() {
                 await addDoc(collection(db, 'userPosts', this.postID, 'comments'), {
                     author: this.loggedInUsername,
